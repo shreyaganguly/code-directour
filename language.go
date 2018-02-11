@@ -1,14 +1,14 @@
 package main
 
-type LanguageMap struct {
+type Language struct {
 	Code    string
 	AceCode string
 	Name    string
 }
 
-var LanguageMaps = []*LanguageMap{
-	&LanguageMap{"c", "c_cpp", "C"},
-	&LanguageMap{"css", "css", "CSS"},
-	&LanguageMap{"go", "golang", "Go"},
-	&LanguageMap{"html", "html", "HTML"},
+var Languages = []*Language{
+	&Language{"c", "c_cpp", "C"},
+	&Language{"css", "css", "CSS"},
+	&Language{"go", "golang", "Go"},
+	&Language{"html", "html", "HTML"},
 }

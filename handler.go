@@ -1,16 +1,13 @@
 package main
 
-import (
-	"fmt"
-	"net/http"
-)
+import "net/http"
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	renderer.HTML(w, http.StatusOK, "index", nil)
 }
 
 func newHandler(w http.ResponseWriter, r *http.Request) {
-	renderer.HTML(w, http.StatusOK, "new", LanguageMaps)
+	renderer.HTML(w, http.StatusOK, "new", Languages)
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,5 +16,20 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("*********", r.Form)
+	snippet := NewSnippet(r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"))
+
+	err = snippet.Save()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func listHandler(w http.ResponseWriter, r *http.Request) {
+	snippets, err := all()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	renderer.HTML(w, http.StatusOK, "list", snippets[len(snippets)-1])
 }

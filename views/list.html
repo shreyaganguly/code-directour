@@ -1,0 +1,13 @@
+<div class="cover">
+  <div class="card" style="width: 100%;">
+  <div class="card-body">
+    <h5 class="card-title">{{ .Title }}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">In {{.Language}}</h6>
+    <pre><code class="card-text" class="javascript">{{.Code}}</code></pre>
+    <a href="{{.References}}" target="_blank" class="card-link">{{.References}}</a>
+  </div>
+</div>
+</div>
+<script>
+hljs.initHighlightingOnLoad();
+</script>

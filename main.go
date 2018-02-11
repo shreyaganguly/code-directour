@@ -5,17 +5,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/unrolled/render"
 )
 
 var (
-	host = flag.String("b", "0.0.0.0", "Host to start your code-directeur")
-	port = flag.Int("p", 8080, "Port to start your code-directeur")
+	dbPath = flag.String("db", "directour.db", "File to store the db")
+	host   = flag.String("b", "0.0.0.0", "Host to start your code-directeur")
+	port   = flag.Int("p", 8080, "Port to start your code-directeur")
 )
 
 var (
 	renderer *render.Render
+	location *time.Location
 )
 
 func main() {
@@ -28,7 +31,15 @@ func main() {
 		IsDevelopment:   true,
 		RequirePartials: true,
 	})
-	err := http.ListenAndServe(addr, setupRoutes())
+	err := initDB(*dbPath)
+	if err != nil {
+		log.Fatal("Problem in initializing db  ", err)
+	}
+	location, err = time.LoadLocation("Asia/Kolkata")
+	if err != nil {
+		log.Fatal("Problem in loadLocation  ", err)
+	}
+	err = http.ListenAndServe(addr, setupRoutes())
 	if err != nil {
 		log.Fatal(err)
 	}
