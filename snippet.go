@@ -21,7 +21,7 @@ func NewSnippet(title, language, code, references string) *SnippetInfo {
 		Key:        strconv.Itoa(int(time.Now().In(location).Unix())),
 		Time:       time.Now().In(location).Format("02-January-2006 15:04"),
 		Title:      title,
-		Language:   language,
+		Language:   getLanguage(language),
 		Code:       code,
 		References: references,
 	}

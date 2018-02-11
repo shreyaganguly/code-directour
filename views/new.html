@@ -8,19 +8,17 @@
     </div>
     <div class="form-group">
       <label> Language: </label>
-      <select class="form-control language" name="language" aria-describedby="languageHelp">
+      <select class="form-control language" name="language" aria-describedby="languageHelp" onChange="changeLanguage(this.value);">
+        <option value="" disabled selected>Plain Text</option>
         {{range . }}
-        <option value="{{.Code}}">{{.Name}}</option>
+        <option value="{{.AceCode}}">{{.Name}}</option>
         {{ end }}
       </select>
       <small id="languageHelp" class="form-text text-muted">Choose the language for your code snippet</small>
     </div>
     <div class="form-group">
       <label> Code: </label>
-    <div class="form-control" aria-describedby="codeHelp" id="editor">function foo(items) {
-        var x = "All this is syntax highlighted";
-        return x;
-    }</div>
+    <div class="form-control" aria-describedby="codeHelp" id="editor"></div>
     <small id="codeHelp" class="form-text text-muted">Paste the code or write anything you need later</small>
   </div>
   <input class="form-control" id="code" name="code" type="hidden">
@@ -36,9 +34,11 @@
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/javascript");
-     $('#code').val(editor.getValue());
+    editor.session.setMode("ace/mode/plain_text");
     editor.on("change",(function(){
        $('#code').val(editor.getValue());
     }));
+    function changeLanguage(value) {
+        editor.session.setMode("ace/mode/"+value);
+    }
 </script>

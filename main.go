@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"time"
@@ -24,10 +25,14 @@ var (
 func main() {
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
+	viewHelpers := template.FuncMap{
+		"getCode": getCode,
+	}
 	renderer = render.New(render.Options{
 		Directory:       "views",
 		Layout:          "layout",
 		Extensions:      []string{".tmpl", ".html"},
+		Funcs:           []template.FuncMap{viewHelpers},
 		IsDevelopment:   true,
 		RequirePartials: true,
 	})
