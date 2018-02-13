@@ -23,6 +23,7 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	http.Redirect(w, r, "/list", http.StatusFound)
 }
 
 func listHandler(w http.ResponseWriter, r *http.Request) {
@@ -31,5 +32,5 @@ func listHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	renderer.HTML(w, http.StatusOK, "list", snippets[len(snippets)-1])
+	renderer.HTML(w, http.StatusOK, "list", reverse(snippets))
 }

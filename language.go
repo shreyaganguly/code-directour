@@ -7,7 +7,7 @@ type Language struct {
 	Name    string
 }
 
-//Languages contain array of language
+//Languages contain array of languages
 var Languages = []*Language{
 	&Language{"c", "c_cpp", "C"},
 	&Language{"css", "css", "CSS"},
