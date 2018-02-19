@@ -3,7 +3,12 @@ package main
 import "net/http"
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	renderer.HTML(w, http.StatusOK, "index", nil)
+	snippets, err := all()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	renderer.HTML(w, http.StatusOK, "index", reverse(snippets))
 }
 
 func newHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,14 +28,5 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/list", http.StatusFound)
-}
-
-func listHandler(w http.ResponseWriter, r *http.Request) {
-	snippets, err := all()
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	renderer.HTML(w, http.StatusOK, "list", reverse(snippets))
+	http.Redirect(w, r, "/index", http.StatusFound)
 }

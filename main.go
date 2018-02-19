@@ -44,6 +44,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Problem in loadLocation  ", err)
 	}
+	log.Println("Starting code-directour at ", addr)
 	err = http.ListenAndServe(addr, setupRoutes())
 	if err != nil {
 		log.Fatal(err)

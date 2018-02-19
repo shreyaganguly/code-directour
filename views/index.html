@@ -1,11 +1,21 @@
 <div class="container" style="padding:20px;">
-	<div class="row">
-			<div class="offset-sm-3 col-sm-6">
-				<h3 align="center">Welcome</h3>
-		    <div class="list-group" style="margin:50px;">
-					<a href="/list" class="list-group-item list-group-item-action">List all snippets</a>
-		      <a href="/new" class="list-group-item list-group-item-action">Add a snippet</a>
-		    </div>
-			</div>
-		</div>
+  <a class="btn btn-sm btn-primary float-right" style="margin-bottom:8px;margin-left:8px;" href="/new">New snippet</a>
+  {{ $length := len . }} {{ if eq $length 0 }}
+  <div class="card" style="width:100%;text-align:center;margin-top:100px; ">
+    <h3 style="text-align:center;margin:100px;"> No Snippets Found! </h3>
+  </div>
+  {{ end }}
+  {{ range . }}
+  <div class="card" style="width: 100%;">
+  <div class="card-body">
+    <h5 class="card-title">{{ .Title }}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">In {{ .Language }}</h6>
+    <pre><code class="card-text" class={{ .Language | getCode }}>{{.Code}}</code></pre>
+    <a href="{{.References}}" target="_blank" class="card-link">{{.References}}</a>
+  </div>
+  </div>
+  {{ end }}
 </div>
+<script>
+hljs.initHighlightingOnLoad();
+</script>
