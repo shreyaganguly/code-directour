@@ -78,7 +78,7 @@ func lookupinBucket(name string) (*SnippetInfo, error) {
 }
 
 func lookupinUser(name string) (*User, error) {
-	var s *User
+	var u *User
 	e := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("user"))
 
@@ -88,7 +88,7 @@ func lookupinUser(name string) (*User, error) {
 
 		v := b.Get([]byte(name))
 
-		err := json.Unmarshal(v, &s)
+		err := json.Unmarshal(v, &u)
 
 		if err != nil {
 			return err
@@ -97,7 +97,7 @@ func lookupinUser(name string) (*User, error) {
 		return nil
 	})
 
-	return s, e
+	return u, e
 }
 
 func all() ([]*SnippetInfo, error) {

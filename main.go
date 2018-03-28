@@ -23,6 +23,7 @@ var (
 )
 
 func main() {
+	//TODO : change view structure
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	viewHelpers := template.FuncMap{
