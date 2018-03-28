@@ -1,0 +1,33 @@
+<div class="container" style="padding:20px;">
+  <div class="row">
+    <div class="offset-sm-4 col-sm-5">
+      <form class="form-horizontal" action="/login" method="POST">
+        <h3 align="center">Welcome to Code Directour!</h3>
+        <div class="card">
+          <div class="card-block">
+            {{ if ne . ""}}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <strong>{{ . }}</strong>
+            </div>
+            {{ end }}
+            <div class="form-group">
+              <label><b> Name: </b></label>
+              <input class="form-control" name="username" required/>
+            </div>
+            <div class="form-group">
+              <label><b> Password: </b></label>
+              <input class="form-control" name="password" type="password" required/>
+            </div>
+            <div style="display:block;text-align:center;">
+              <button style="margin-bottom: 10px;cursor:pointer;" type="submit" class="btn btn-primary btn-lg btn-block">Sign Up</button>
+              <button style="cursor:pointer;" type="submit" class="btn btn-link">Log In</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

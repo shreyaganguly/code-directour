@@ -29,7 +29,7 @@ func NewSnippet(title, language, code, references string) *SnippetInfo {
 
 //Save saves the snippet
 func (s *SnippetInfo) Save() error {
-	err := update(s.Key, s)
+	err := update(s.Key, "manager", s)
 	if err != nil {
 		return err
 	}
