@@ -1,21 +1,22 @@
 <div class="container" style="padding:20px;">
-  <a class="btn btn-sm btn-primary float-right" style="margin-bottom:8px;margin-left:8px;" href="/new">New snippet</a>
-  {{ $length := len . }} {{ if eq $length 0 }}
-  <div class="card" style="width:100%;text-align:center;margin-top:100px; ">
-    <h3 style="text-align:center;margin:100px;"> No Snippets Found! </h3>
-  </div>
-  {{ end }}
-  {{ range . }}
-  <div class="card" style="width: 100%;">
-  <div class="card-body">
-    <h5 class="card-title">{{ .Title }}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">In {{ .Language }}</h6>
-    <pre><code class="card-text" class={{ .Language | getCode }}>{{.Code}}</code></pre>
-    <a href="{{.References}}" target="_blank" class="card-link">{{.References}}</a>
-  </div>
-  </div>
-  {{ end }}
+	<div class="row">
+			<div class="offset-sm-3 col-sm-6">
+				<h3 align="center">Welcome {{.}}
+					<form method="POST" action="/logout" style="display:inline-block;">
+						<span id="logout" style="margin:15px; cursor:pointer;"><i class="fa fa-sign-out" aria-hidden="true"></i>
+						</span>
+					</form>
+				</h3>
+		    <div class="list-group" style="margin:50px;">
+		      <a href="/all" class="list-group-item list-group-item-action">See All Snippets</a>
+		      <a href="/#" class="list-group-item list-group-item-action">See Snippets shared with you</a>
+		      <a href="/#" class="list-group-item list-group-item-action">Profile Settings</a>
+		    </div>
+			</div>
+		</div>
 </div>
 <script>
-hljs.initHighlightingOnLoad();
+$("#logout").on("click", function() {
+  $("form").submit();
+});
 </script>

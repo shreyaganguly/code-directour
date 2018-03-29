@@ -5,12 +5,16 @@ import (
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	renderer.HTML(w, http.StatusOK, "index", getUserName(r))
+}
+
+func snippetsHandler(w http.ResponseWriter, r *http.Request) {
 	snippets, err := all(getUserName(r))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	renderer.HTML(w, http.StatusOK, "index", reverse(snippets))
+	renderer.HTML(w, http.StatusOK, "all", reverse(snippets))
 }
 
 func newHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,5 +33,5 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/index", http.StatusFound)
+	http.Redirect(w, r, "/all", http.StatusFound)
 }
