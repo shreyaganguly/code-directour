@@ -39,6 +39,36 @@ func createBucket(names ...string) error {
 //update updates key value pair in a bucket
 func update(key, bucket string, value interface{}) error {
 	if err := db.Update(func(tx *bolt.Tx) error {
+		if bucket == "manager" {
+			b := tx.Bucket([]byte("manager"))
+			var snippetInfos []*SnippetInfo
+			var flag bool
+			if err := b.ForEach(func(k, v []byte) error {
+				if string(k) == key {
+					err := json.Unmarshal(v, &snippetInfos)
+					if err != nil {
+						return err
+					}
+					snippetInfos = append(snippetInfos, value.(*SnippetInfo))
+					flag = true
+					return nil
+				}
+				return nil
+			}); err != nil {
+				return err
+			}
+			if !flag {
+				snippetInfos = append(snippetInfos, value.(*SnippetInfo))
+			}
+			marshaledSnippets, err := json.Marshal(snippetInfos)
+			if err != nil {
+				return err
+			}
+			if err := tx.Bucket([]byte(bucket)).Put([]byte(key), []byte(marshaledSnippets)); err != nil {
+				return err
+			}
+			return nil
+		}
 		marshaledValue, err := json.Marshal(value)
 
 		if err != nil {
@@ -100,24 +130,23 @@ func lookupinUser(name string) (*User, error) {
 	return u, e
 }
 
-func all() ([]*SnippetInfo, error) {
+func all(name string) ([]*SnippetInfo, error) {
 	var snippetInfos []*SnippetInfo
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("manager"))
 
 		// Iterate over items in sorted key order.
 		if err := b.ForEach(func(k, v []byte) error {
-			var s *SnippetInfo
-			err := json.Unmarshal(v, &s)
-			if err != nil {
-				return err
+			if string(k) == name {
+				err := json.Unmarshal(v, &snippetInfos)
+				if err != nil {
+					return err
+				}
 			}
-			snippetInfos = append(snippetInfos, s)
 			return nil
 		}); err != nil {
 			return err
 		}
-
 		return nil
 	}); err != nil {
 		return nil, err

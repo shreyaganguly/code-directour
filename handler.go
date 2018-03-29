@@ -1,9 +1,11 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	snippets, err := all()
+	snippets, err := all(getUserName(r))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -22,11 +24,10 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	snippet := NewSnippet(r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"))
-
-	err = snippet.Save()
+	err = snippet.Save(getUserName(r))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/index", http.StatusFound)
 }
