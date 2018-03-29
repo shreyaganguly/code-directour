@@ -2,6 +2,8 @@ package main
 
 import (
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,6 +21,23 @@ func snippetsHandler(w http.ResponseWriter, r *http.Request) {
 
 func newHandler(w http.ResponseWriter, r *http.Request) {
 	renderer.HTML(w, http.StatusOK, "new", Languages)
+}
+
+func editHandler(w http.ResponseWriter, r *http.Request) {
+	args := mux.Vars(r)
+	snippet, err := findSnippetForUser(getUserName(r), args["key"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	data := struct {
+		Languages []*Language
+		Snippet   *SnippetInfo
+	}{
+		Languages,
+		snippet,
+	}
+	renderer.HTML(w, http.StatusOK, "edit", data)
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {

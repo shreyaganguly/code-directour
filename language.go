@@ -34,3 +34,12 @@ func getCode(language string) string {
 	}
 	return "bash"
 }
+
+func getAceCode(language string) string {
+	for _, v := range Languages {
+		if v.Name == language {
+			return v.AceCode
+		}
+	}
+	return "bash"
+}

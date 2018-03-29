@@ -153,3 +153,31 @@ func all(name string) ([]*SnippetInfo, error) {
 	}
 	return snippetInfos, nil
 }
+
+func find(name, key string) (*SnippetInfo, error) {
+	var snippetInfos []*SnippetInfo
+	if err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("manager"))
+		// Iterate over items in sorted key order.
+		if err := b.ForEach(func(k, v []byte) error {
+			if string(k) == name {
+				err := json.Unmarshal(v, &snippetInfos)
+				if err != nil {
+					return err
+				}
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+	for _, snippet := range snippetInfos {
+		if snippet.Key == key {
+			return snippet, nil
+		}
+	}
+	return nil, errors.New(" Snippet Not found")
+}

@@ -12,6 +12,7 @@
     <h6 class="card-subtitle mb-2 text-muted">In {{ .Language }}</h6>
     <pre><code class="card-text" class={{ .Language | getCode }}>{{.Code}}</code></pre>
     <a href="{{.References}}" target="_blank" class="card-link">{{.References}}</a>
+    <a href="/edit/{{ .Key }}" class="btn btn-primary">Edit</a>
   </div>
   </div>
   {{ end }}

@@ -16,6 +16,7 @@ func setupRoutes() http.Handler {
 	r.HandleFunc("/all", authenticationMiddleware(snippetsHandler)).Methods("GET")
 	r.HandleFunc("/index", authenticationMiddleware(indexHandler)).Methods("GET")
 	r.HandleFunc("/new", authenticationMiddleware(newHandler)).Methods("GET")
+	r.HandleFunc("/edit/{key}", authenticationMiddleware(editHandler)).Methods("GET")
 	r.HandleFunc("/save", authenticationMiddleware(saveHandler)).Methods("POST")
 	return r
 }

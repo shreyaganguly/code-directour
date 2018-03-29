@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 )
@@ -28,9 +27,12 @@ func NewSnippet(title, language, code, references string) *SnippetInfo {
 	}
 }
 
+func findSnippetForUser(user, key string) (*SnippetInfo, error) {
+	return find(user, key)
+}
+
 //Save saves the snippet
 func (s *SnippetInfo) Save(user string) error {
-	fmt.Println("Came in save")
 	err := update(user, "manager", s)
 	if err != nil {
 		return err

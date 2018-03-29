@@ -27,7 +27,8 @@ func main() {
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	viewHelpers := template.FuncMap{
-		"getCode": getCode,
+		"getCode":    getCode,
+		"getAceCode": getAceCode,
 	}
 	renderer = render.New(render.Options{
 		Directory:       "views",
