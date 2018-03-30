@@ -40,6 +40,17 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 	renderer.HTML(w, http.StatusOK, "edit", data)
 }
 
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+
+	args := mux.Vars(r)
+	err := deleteSnippetForUser(getUserName(r), args["key"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/all", http.StatusFound)
+}
+
 func saveHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {

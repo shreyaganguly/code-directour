@@ -181,3 +181,45 @@ func find(name, key string) (*SnippetInfo, error) {
 	}
 	return nil, errors.New(" Snippet Not found")
 }
+
+func delete(name, key string) error {
+	var snippetInfos []*SnippetInfo
+	if err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("manager"))
+		// Iterate over items in sorted key order.
+		if err := b.ForEach(func(k, v []byte) error {
+			if string(k) == name {
+				err := json.Unmarshal(v, &snippetInfos)
+				if err != nil {
+					return err
+				}
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	var flag bool
+	for i, snippet := range snippetInfos {
+		if snippet.Key == key && !flag {
+			snippetInfos = append(snippetInfos[:i], snippetInfos[i+1:]...)
+			flag = true
+		}
+	}
+	marshaledSnippets, err := json.Marshal(snippetInfos)
+	if err != nil {
+		return err
+	}
+	if err := db.Update(func(tx *bolt.Tx) error {
+		if err := tx.Bucket([]byte("manager")).Put([]byte(name), []byte(marshaledSnippets)); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return err
+	}
+	return nil
+}

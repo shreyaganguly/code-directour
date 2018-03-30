@@ -34,7 +34,7 @@
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/plain_text");
+    editor.session.setMode("ace/mode/{{$code}}");
     editor.on("change",(function(){
        $('#code').val(editor.getValue());
     }));

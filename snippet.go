@@ -1,8 +1,9 @@
 package main
 
 import (
-	"strconv"
 	"time"
+
+	"github.com/dchest/uniuri"
 )
 
 //SnippetInfo contains information about snippets stored
@@ -18,7 +19,7 @@ type SnippetInfo struct {
 //NewSnippet creates new snippet
 func NewSnippet(title, language, code, references string) *SnippetInfo {
 	return &SnippetInfo{
-		Key:        strconv.Itoa(int(time.Now().In(location).Unix())),
+		Key:        uniuri.New(),
 		Time:       time.Now().In(location).Format("02-January-2006 15:04"),
 		Title:      title,
 		Language:   getLanguage(language),
@@ -29,6 +30,10 @@ func NewSnippet(title, language, code, references string) *SnippetInfo {
 
 func findSnippetForUser(user, key string) (*SnippetInfo, error) {
 	return find(user, key)
+}
+
+func deleteSnippetForUser(user, key string) error {
+	return delete(user, key)
 }
 
 //Save saves the snippet

@@ -12,11 +12,19 @@
     <h6 class="card-subtitle mb-2 text-muted">In {{ .Language }}</h6>
     <pre><code class="card-text" class={{ .Language | getCode }}>{{.Code}}</code></pre>
     <a href="{{.References}}" target="_blank" class="card-link">{{.References}}</a>
-    <a href="/edit/{{ .Key }}" class="btn btn-primary">Edit</a>
+    <div class="card-body">
+      <a href="/edit/{{ .Key }}" class="btn btn-primary">Edit</a>
+      <a href="/delete/{{ .Key }}" class="btn btn-primary" id="delete">Delete</a>
+    </div>
   </div>
   </div>
   {{ end }}
 </div>
 <script>
 hljs.initHighlightingOnLoad();
+// $("#delete").on("click", function() {
+//   console.log("Came here");
+//   $("form").submit();
+// });
+</script>
 </script>
