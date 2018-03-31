@@ -9,8 +9,14 @@
   <div class="card" style="width: 100%;">
   <div class="card-body">
     <h5 class="card-title">{{ .Title }}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">In {{ .Language }}</h6>
-    <pre><code class="card-text" class={{ .Language | getCode }}>{{.Code}}</code></pre>
+    <h6 class="card-subtitle mb-2 text-muted">In {{ .Language }}
+    <div class="tooltip" style="opacity: 1 !important;">
+      <span class="tooltiptext" id="copyTooltip">Copy Code!</span>
+      <span style="margin:15px; cursor:pointer;" onclick="copyToClipboard()" onmouseout="outFunc()"><i class="fa fa-copy" aria-hidden="true"></i>
+      </span>
+    </div>
+    </h6>
+    <pre><code class="card-text" id="code" class={{ .Language | getCode }}>{{.Code}}</code></pre>
     <a href="{{.References}}" target="_blank" class="card-link">{{.References}}</a>
     <div class="card-body">
       <a href="/edit/{{ .Key }}" class="btn btn-primary">Edit</a>
@@ -22,9 +28,19 @@
 </div>
 <script>
 hljs.initHighlightingOnLoad();
-// $("#delete").on("click", function() {
-//   console.log("Came here");
-//   $("form").submit();
-// });
+function copyToClipboard() {
+  var tooltip = document.getElementById("copyTooltip");
+  tooltip.innerHTML = "Copied!";
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($("#code").text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+function outFunc() {
+  var tooltip = document.getElementById("copyTooltip");
+  tooltip.innerHTML = "Copy Code!";
+}
+
 </script>
 </script>

@@ -52,12 +52,32 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
+	var snippet *SnippetInfo
+	var err error
+	err = r.ParseForm()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	snippet := NewSnippet(r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"))
+
+	if r.FormValue("key") != "" {
+		snippet, err = findSnippetForUser(getUserName(r), r.FormValue("key"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		err = deleteSnippetForUser(getUserName(r), r.FormValue("key"))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		snippet.Title = r.FormValue("title")
+		snippet.Language = r.FormValue("language")
+		snippet.Code = r.FormValue("code")
+		snippet.References = r.FormValue("references")
+	} else {
+		snippet = NewSnippet(r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"))
+	}
 	err = snippet.Save(getUserName(r))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
