@@ -104,8 +104,8 @@ func shareListHandler(w http.ResponseWriter, r *http.Request) {
 
 func shareHandler(w http.ResponseWriter, r *http.Request) {
 	args := mux.Vars(r)
-	//TODO: change abcd
-	userExists := userExists("Abcd")
+	recepient := r.PostFormValue("recepient")
+	userExists := userExists(recepient)
 	if !userExists {
 		snippets, err := all(getUserName(r))
 		if err != nil {
@@ -122,13 +122,13 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 		renderer.HTML(w, http.StatusOK, "all", data)
 		return
 	}
-	snippet, err := findAndUpdateSnippet(getUserName(r), args["key"], "Abcd")
+	snippet, err := findAndUpdateSnippet(getUserName(r), args["key"], recepient)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	sharedSnippet := NewSnippet(snippet.Title, snippet.Language, snippet.Code, snippet.References, true, getUserName(r), false, "")
-	err = sharedSnippet.Save("Abcd")
+	err = sharedSnippet.Save(recepient)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

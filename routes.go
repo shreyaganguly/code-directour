@@ -20,7 +20,7 @@ func setupRoutes() http.Handler {
 	//TODO: make it post
 	r.HandleFunc("/edit/{key}", authenticationMiddleware(editHandler)).Methods("GET")
 	r.HandleFunc("/delete/{key}", authenticationMiddleware(deleteHandler)).Methods("GET")
-	r.HandleFunc("/share/{key}", authenticationMiddleware(shareHandler)).Methods("GET")
+	r.HandleFunc("/share/{key}", authenticationMiddleware(shareHandler)).Methods("POST")
 	r.HandleFunc("/save", authenticationMiddleware(saveHandler)).Methods("POST")
 	return r
 }
