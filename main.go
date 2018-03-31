@@ -25,6 +25,8 @@ var (
 func main() {
 	//TODO : change view structure
 	//TODO: add recently deleted snippet section
+	// TODO: add sharing history
+	//TODO: add show more / less in view
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	viewHelpers := template.FuncMap{

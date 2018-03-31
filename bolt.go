@@ -130,8 +130,8 @@ func lookupinUser(name string) (*User, error) {
 	return u, e
 }
 
-func all(name string) ([]*SnippetInfo, error) {
-	var snippetInfos []*SnippetInfo
+func all(name string) (Snippets, error) {
+	var snippetInfos Snippets
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("manager"))
 
@@ -180,6 +180,49 @@ func find(name, key string) (*SnippetInfo, error) {
 		}
 	}
 	return nil, errors.New(" Snippet Not found")
+}
+
+func findAndUpdate(name, key, sharedTo string) (*SnippetInfo, error) {
+	var snippetInfos []*SnippetInfo
+	if err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("manager"))
+		// Iterate over items in sorted key order.
+		if err := b.ForEach(func(k, v []byte) error {
+			if string(k) == name {
+				err := json.Unmarshal(v, &snippetInfos)
+				if err != nil {
+					return err
+				}
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+	var sharedSnippet *SnippetInfo
+	for _, snippet := range snippetInfos {
+		if snippet.Key == key {
+			sharedSnippet = snippet
+			snippet.SharedToSomeone = true
+			snippet.SharedTo = sharedTo
+		}
+	}
+	marshaledSnippets, err := json.Marshal(snippetInfos)
+	if err != nil {
+		return nil, err
+	}
+	if err := db.Update(func(tx *bolt.Tx) error {
+		if err := tx.Bucket([]byte("manager")).Put([]byte(name), []byte(marshaledSnippets)); err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		return sharedSnippet, err
+	}
+	return sharedSnippet, nil
 }
 
 func delete(name, key string) error {

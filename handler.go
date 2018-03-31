@@ -16,7 +16,14 @@ func snippetsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	renderer.HTML(w, http.StatusOK, "all", reverse(snippets))
+	data := struct {
+		SnippetInfos Snippets
+		ErrorMessage string
+	}{
+		reverse(snippets.own()),
+		"",
+	}
+	renderer.HTML(w, http.StatusOK, "all", data)
 }
 
 func newHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,9 +83,52 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		snippet.Code = r.FormValue("code")
 		snippet.References = r.FormValue("references")
 	} else {
-		snippet = NewSnippet(r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"))
+		snippet = NewSnippet(r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"), false, "", false, "")
 	}
 	err = snippet.Save(getUserName(r))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/all", http.StatusFound)
+}
+
+func shareListHandler(w http.ResponseWriter, r *http.Request) {
+	snippets, err := all(getUserName(r))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	renderer.HTML(w, http.StatusOK, "sharedlist", reverse(snippets.others()))
+}
+
+func shareHandler(w http.ResponseWriter, r *http.Request) {
+	args := mux.Vars(r)
+	//TODO: change abcd
+	userExists := userExists("Abcd")
+	if !userExists {
+		snippets, err := all(getUserName(r))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		data := struct {
+			SnippetInfos Snippets
+			ErrorMessage string
+		}{
+			reverse(snippets.own()),
+			"This User does not have a code-directour account!!!",
+		}
+		renderer.HTML(w, http.StatusOK, "all", data)
+		return
+	}
+	snippet, err := findAndUpdateSnippet(getUserName(r), args["key"], "Abcd")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	sharedSnippet := NewSnippet(snippet.Title, snippet.Language, snippet.Code, snippet.References, true, getUserName(r), false, "")
+	err = sharedSnippet.Save("Abcd")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
