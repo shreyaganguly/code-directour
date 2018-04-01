@@ -19,9 +19,11 @@ func snippetsHandler(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		SnippetInfos Snippets
 		ErrorMessage string
+		Endpoint     string
 	}{
 		reverse(snippets.own()),
 		"",
+		*endpoint,
 	}
 	renderer.HTML(w, http.StatusOK, "all", data)
 }

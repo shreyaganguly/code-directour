@@ -12,9 +12,10 @@ import (
 )
 
 var (
-	dbPath = flag.String("db", "directour.db", "File to store the db")
-	host   = flag.String("b", "0.0.0.0", "Host to start your code-directeur")
-	port   = flag.Int("p", 8080, "Port to start your code-directeur")
+	dbPath   = flag.String("db", "directour.db", "File to store the db")
+	host     = flag.String("b", "0.0.0.0", "Host to start your code-directeur")
+	port     = flag.Int("p", 8080, "Port to start your code-directeur")
+	endpoint = flag.String("e", "http://0.0.0.0:8080", "Endpoint that will be shared in the link")
 )
 
 var (

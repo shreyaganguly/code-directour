@@ -1,3 +1,4 @@
+{{ $endpoint := .Endpoint }}
 <div class="container" style="padding:20px;">
   {{ if ne .ErrorMessage ""}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -31,6 +32,7 @@
         <a href="/edit/{{ .Key }}" class="btn btn-primary">Edit</a>
         <a href="/delete/{{ .Key }}" class="btn btn-primary" id="delete">Delete</a>
         <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareModal" id="share" data-key="{{ .Key }}">Share with code-directour user</a>
+        <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareLinkModal" id="sharelink" data-key="{{ .Key }}" data-endpoint="{{ $endpoint }}">Share Link</a>
       </div>
     </div>
     </div>
@@ -47,7 +49,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="" id="test" method="POST">
+        <form action="" id="shareform" method="POST">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Share With:</label>
             <input type="text" name="recepient" class="form-control" id="shared-with">
@@ -61,11 +63,31 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="shareLinkModal" tabindex="-1" role="dialog" aria-labelledby="shareLinkModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shareLinkModalLabel">Shareable Link</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p></p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 hljs.initHighlightingOnLoad();
 var recepientform;
 window.onload = function() {
-        recepientform = document.getElementById("test");
+        recepientform = document.getElementById("shareform");
     }
 
 function copyToClipboard() {
@@ -85,6 +107,15 @@ $('#shareModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget)
   var recepient = button.data('key')
   recepientform.action = "/share/"+ recepient;
+})
+$('#shareLinkModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var link = button.data('key')
+  var endpoint = button.data('endpoint')
+  console.log(endpoint);
+  shareLink = endpoint + "/link/" + link
+  var modal = $(this)
+  modal.find('.modal-body p').text(shareLink)
 })
 
 </script>
