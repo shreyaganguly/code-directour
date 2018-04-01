@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/shreyaganguly/code-directour/db"
+	"github.com/shreyaganguly/code-directour/models"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -11,17 +13,17 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func snippetsHandler(w http.ResponseWriter, r *http.Request) {
-	snippets, err := all(getUserName(r))
+	snippets, err := db.All(getUserName(r))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	data := struct {
-		SnippetInfos Snippets
+		SnippetInfos models.Snippets
 		ErrorMessage string
 		Endpoint     string
 	}{
-		reverse(snippets.own()),
+		reverse(snippets.Own()),
 		"",
 		*endpoint,
 	}
@@ -29,21 +31,21 @@ func snippetsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func newHandler(w http.ResponseWriter, r *http.Request) {
-	renderer.HTML(w, http.StatusOK, "new", Languages)
+	renderer.HTML(w, http.StatusOK, "new", models.Languages)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
 	args := mux.Vars(r)
-	snippet, err := findSnippetForUser(getUserName(r), args["key"])
+	snippet, err := db.Find(getUserName(r), args["key"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	data := struct {
-		Languages []*Language
-		Snippet   *SnippetInfo
+		Languages []*models.Language
+		Snippet   *models.SnippetInfo
 	}{
-		Languages,
+		models.Languages,
 		snippet,
 	}
 	renderer.HTML(w, http.StatusOK, "edit", data)
@@ -52,7 +54,7 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	args := mux.Vars(r)
-	err := deleteSnippetForUser(getUserName(r), args["key"])
+	err := db.Delete(getUserName(r), args["key"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -61,7 +63,7 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
-	var snippet *SnippetInfo
+	var snippet *models.SnippetInfo
 	var err error
 	err = r.ParseForm()
 	if err != nil {
@@ -70,12 +72,12 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.FormValue("key") != "" {
-		snippet, err = findSnippetForUser(getUserName(r), r.FormValue("key"))
+		snippet, err = db.Find(getUserName(r), r.FormValue("key"))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		err = deleteSnippetForUser(getUserName(r), r.FormValue("key"))
+		err = db.Delete(getUserName(r), r.FormValue("key"))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -85,9 +87,9 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		snippet.Code = r.FormValue("code")
 		snippet.References = r.FormValue("references")
 	} else {
-		snippet = NewSnippet(r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"), false, "", false, "")
+		snippet = models.NewSnippet(getUserName(r), r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"), false, "", false, "")
 	}
-	err = snippet.Save(getUserName(r))
+	err = db.Update(snippet)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -96,41 +98,43 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func shareListHandler(w http.ResponseWriter, r *http.Request) {
-	snippets, err := all(getUserName(r))
+	snippets, err := db.All(getUserName(r))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	renderer.HTML(w, http.StatusOK, "sharedlist", reverse(snippets.others()))
+	renderer.HTML(w, http.StatusOK, "sharedlist", reverse(snippets.Others()))
 }
 
 func shareHandler(w http.ResponseWriter, r *http.Request) {
 	args := mux.Vars(r)
 	recepient := r.PostFormValue("recepient")
-	userExists := userExists(recepient)
+	userExists := db.UserExists(recepient)
 	if !userExists {
-		snippets, err := all(getUserName(r))
+		snippets, err := db.All(getUserName(r))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		data := struct {
-			SnippetInfos Snippets
+			SnippetInfos models.Snippets
 			ErrorMessage string
+			Endpoint     string
 		}{
-			reverse(snippets.own()),
+			reverse(snippets.Own()),
 			"This User does not have a code-directour account!!!",
+			*endpoint,
 		}
 		renderer.HTML(w, http.StatusOK, "all", data)
 		return
 	}
-	snippet, err := findAndUpdateSnippet(getUserName(r), args["key"], recepient)
+	snippet, err := db.FindAndUpdate(getUserName(r), args["key"], recepient)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	sharedSnippet := NewSnippet(snippet.Title, snippet.Language, snippet.Code, snippet.References, true, getUserName(r), false, "")
-	err = sharedSnippet.Save(recepient)
+	sharedSnippet := models.NewSnippet(recepient, snippet.Title, snippet.Language, snippet.Code, snippet.References, true, getUserName(r), false, "")
+	err = db.Update(sharedSnippet)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -140,7 +144,7 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 
 func linkHandler(w http.ResponseWriter, r *http.Request) {
 	args := mux.Vars(r)
-	snippet, err := findSnippetForUser(getUserName(r), args["key"])
+	snippet, err := db.Find(getUserName(r), args["key"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

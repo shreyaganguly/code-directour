@@ -1,4 +1,4 @@
-package main
+package models
 
 //Language contains structure for language
 type Language struct {
@@ -26,7 +26,7 @@ func getLanguage(acecode string) string {
 	return "Plain Text"
 }
 
-func getCode(language string) string {
+func GetCode(language string) string {
 	for _, v := range Languages {
 		if v.Name == language {
 			return v.Code
@@ -35,7 +35,7 @@ func getCode(language string) string {
 	return "bash"
 }
 
-func getAceCode(language string) string {
+func GetAceCode(language string) string {
 	for _, v := range Languages {
 		if v.Name == language {
 			return v.AceCode

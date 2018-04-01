@@ -2,6 +2,9 @@ package main
 
 import (
 	"net/http"
+
+	"github.com/shreyaganguly/code-directour/db"
+	"github.com/shreyaganguly/code-directour/models"
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
@@ -12,16 +15,15 @@ func signUpHandler(w http.ResponseWriter, r *http.Request) {
 	renderer.HTML(w, http.StatusOK, "sign_up", "")
 }
 
-//TODO: common out view
 func saveUserHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("username")
 	pass := r.FormValue("password")
-	user, _ := lookupinUser(name)
+	user, _ := db.LookupinUser(name)
 	if user != nil {
 		renderer.HTML(w, http.StatusOK, "sign_up", "User Name already exists")
 		return
 	}
-	err := NewUser(name, pass).Save()
+	err := db.Update(models.NewUser(name, pass))
 	if err != nil {
 		renderer.HTML(w, http.StatusOK, "sign_up", "Internal Error. Please try Again!")
 		return
@@ -33,7 +35,7 @@ func saveUserHandler(w http.ResponseWriter, r *http.Request) {
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("username")
 	pass := r.FormValue("password")
-	user, err := lookupinUser(name)
+	user, err := db.LookupinUser(name)
 	if err != nil || user == nil || user.Password != pass {
 		renderer.HTML(w, http.StatusOK, "login", "Wrong Username/ Password provided")
 		return

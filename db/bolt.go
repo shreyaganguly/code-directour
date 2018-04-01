@@ -1,17 +1,19 @@
-package main
+package db
 
 import (
 	"encoding/json"
 	"errors"
+	"log"
 
 	"github.com/boltdb/bolt"
+	"github.com/shreyaganguly/code-directour/models"
 )
 
 var (
 	db *bolt.DB
 )
 
-func initDB(path string) error {
+func Init(path string) error {
 	var err error
 	db, err = bolt.Open(path, 0644, nil)
 	if err != nil {
@@ -36,12 +38,24 @@ func createBucket(names ...string) error {
 	return nil
 }
 
+func UserExists(u string) bool {
+	user, err := LookupinUser(u)
+	if err != nil || user == nil {
+		log.Println(err)
+		return false
+	}
+	return true
+}
+
 //update updates key value pair in a bucket
-func update(key, bucket string, value interface{}) error {
+func Update(m models.Model) error {
+	bucket := m.BucketName()
+	key := m.ID()
+	value := m.Value()
 	if err := db.Update(func(tx *bolt.Tx) error {
 		if bucket == "manager" {
-			b := tx.Bucket([]byte("manager"))
-			var snippetInfos []*SnippetInfo
+			b := tx.Bucket([]byte(m.BucketName()))
+			var snippetInfos []*models.SnippetInfo
 			var flag bool
 			if err := b.ForEach(func(k, v []byte) error {
 				if string(k) == key {
@@ -49,7 +63,7 @@ func update(key, bucket string, value interface{}) error {
 					if err != nil {
 						return err
 					}
-					snippetInfos = append(snippetInfos, value.(*SnippetInfo))
+					snippetInfos = append(snippetInfos, value.(*models.SnippetInfo))
 					flag = true
 					return nil
 				}
@@ -58,7 +72,7 @@ func update(key, bucket string, value interface{}) error {
 				return err
 			}
 			if !flag {
-				snippetInfos = append(snippetInfos, value.(*SnippetInfo))
+				snippetInfos = append(snippetInfos, value.(*models.SnippetInfo))
 			}
 			marshaledSnippets, err := json.Marshal(snippetInfos)
 			if err != nil {
@@ -84,8 +98,8 @@ func update(key, bucket string, value interface{}) error {
 	return nil
 }
 
-func lookupinBucket(name string) (*SnippetInfo, error) {
-	var s *SnippetInfo
+func lookupinBucket(name string) (*models.SnippetInfo, error) {
+	var s *models.SnippetInfo
 	e := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("manager"))
 
@@ -107,8 +121,8 @@ func lookupinBucket(name string) (*SnippetInfo, error) {
 	return s, e
 }
 
-func lookupinUser(name string) (*User, error) {
-	var u *User
+func LookupinUser(name string) (*models.User, error) {
+	var u *models.User
 	e := db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("user"))
 
@@ -130,8 +144,8 @@ func lookupinUser(name string) (*User, error) {
 	return u, e
 }
 
-func all(name string) (Snippets, error) {
-	var snippetInfos Snippets
+func All(name string) (models.Snippets, error) {
+	var snippetInfos models.Snippets
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("manager"))
 
@@ -154,8 +168,8 @@ func all(name string) (Snippets, error) {
 	return snippetInfos, nil
 }
 
-func find(name, key string) (*SnippetInfo, error) {
-	var snippetInfos []*SnippetInfo
+func Find(name, key string) (*models.SnippetInfo, error) {
+	var snippetInfos []*models.SnippetInfo
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("manager"))
 		// Iterate over items in sorted key order.
@@ -182,8 +196,8 @@ func find(name, key string) (*SnippetInfo, error) {
 	return nil, errors.New(" Snippet Not found")
 }
 
-func findAndUpdate(name, key, sharedTo string) (*SnippetInfo, error) {
-	var snippetInfos []*SnippetInfo
+func FindAndUpdate(name, key, sharedTo string) (*models.SnippetInfo, error) {
+	var snippetInfos []*models.SnippetInfo
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("manager"))
 		// Iterate over items in sorted key order.
@@ -202,13 +216,14 @@ func findAndUpdate(name, key, sharedTo string) (*SnippetInfo, error) {
 	}); err != nil {
 		return nil, err
 	}
-	var sharedSnippet *SnippetInfo
+	var sharedSnippet *models.SnippetInfo
 	for _, snippet := range snippetInfos {
 		if snippet.Key == key {
 			sharedSnippet = snippet
 			snippet.SharedToSomeone = true
 			snippet.SharedTo = sharedTo
 		}
+
 	}
 	marshaledSnippets, err := json.Marshal(snippetInfos)
 	if err != nil {
@@ -225,8 +240,8 @@ func findAndUpdate(name, key, sharedTo string) (*SnippetInfo, error) {
 	return sharedSnippet, nil
 }
 
-func delete(name, key string) error {
-	var snippetInfos []*SnippetInfo
+func Delete(name, key string) error {
+	var snippetInfos []*models.SnippetInfo
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("manager"))
 		// Iterate over items in sorted key order.

@@ -17,7 +17,6 @@ func setupRoutes() http.Handler {
 	r.HandleFunc("/shared", authenticationMiddleware(shareListHandler)).Methods("GET")
 	r.HandleFunc("/index", authenticationMiddleware(indexHandler)).Methods("GET")
 	r.HandleFunc("/new", authenticationMiddleware(newHandler)).Methods("GET")
-	//TODO: make it post
 	r.HandleFunc("/edit/{key}", authenticationMiddleware(editHandler)).Methods("GET")
 	r.HandleFunc("/delete/{key}", authenticationMiddleware(deleteHandler)).Methods("GET")
 	r.HandleFunc("/share/{key}", authenticationMiddleware(shareHandler)).Methods("POST")

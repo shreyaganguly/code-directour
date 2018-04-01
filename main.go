@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/shreyaganguly/code-directour/db"
+	"github.com/shreyaganguly/code-directour/models"
 	"github.com/unrolled/render"
 )
 
@@ -26,14 +28,23 @@ var (
 func main() {
 	//TODO : change view structure
 	//TODO: add recently deleted snippet section
-	// TODO: add sharing history
+	//TODO: add sharing history
 	//TODO: add show more / less in view
 	//TODO: check if references is a link
+	//TODO: remove views as html
+	// TODO: add mailgun and slackbot
+	// TODO: give link from listing of snippets to a particular snippet
+	// TODO: give share action in overflow button
+	//TODO: make edit and delete post request
+	//TODO: refactor code
+	// TODO: add date created/modified in the listing section
+	//TODO: change name of functions and methods and bucketnames
+	// TODO: add comments for exported functions
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	viewHelpers := template.FuncMap{
-		"getCode":    getCode,
-		"getAceCode": getAceCode,
+		"getCode":    models.GetCode,
+		"getAceCode": models.GetAceCode,
 	}
 	renderer = render.New(render.Options{
 		Directory:       "views",
@@ -43,7 +54,7 @@ func main() {
 		IsDevelopment:   true,
 		RequirePartials: true,
 	})
-	err := initDB(*dbPath)
+	err := db.Init(*dbPath)
 	if err != nil {
 		log.Fatal("Problem in initializing db  ", err)
 	}
@@ -51,6 +62,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Problem in loadLocation  ", err)
 	}
+	models.SetLocation(location)
 	log.Println("Starting code-directour at ", addr)
 	err = http.ListenAndServe(addr, setupRoutes())
 	if err != nil {
