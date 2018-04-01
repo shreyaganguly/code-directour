@@ -9,7 +9,9 @@ import (
 	"time"
 
 	"github.com/shreyaganguly/code-directour/db"
+	"github.com/shreyaganguly/code-directour/handlers"
 	"github.com/shreyaganguly/code-directour/models"
+	"github.com/shreyaganguly/code-directour/util"
 	"github.com/unrolled/render"
 )
 
@@ -54,6 +56,8 @@ func main() {
 		IsDevelopment:   true,
 		RequirePartials: true,
 	})
+	util.SetRenderer(renderer)
+	util.SetEndpoint(*endpoint)
 	err := db.Init(*dbPath)
 	if err != nil {
 		log.Fatal("Problem in initializing db  ", err)
@@ -64,7 +68,7 @@ func main() {
 	}
 	models.SetLocation(location)
 	log.Println("Starting code-directour at ", addr)
-	err = http.ListenAndServe(addr, setupRoutes())
+	err = http.ListenAndServe(addr, handlers.SetUpRoutes())
 	if err != nil {
 		log.Fatal(err)
 	}

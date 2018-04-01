@@ -47,19 +47,33 @@ func NewSnippet(owner, title, language, code, references string, sharedBySomeone
 	}
 }
 
-// func findSnippetForUser(user, key string) (*SnippetInfo, error) {
-// 	return find(user, key)
-// }
-//
-// func findAndUpdateSnippet(user, key, sharedTo string) (*SnippetInfo, error) {
-// 	return findAndUpdate(user, key, sharedTo)
-// }
-//
-// func deleteSnippetForUser(user, key string) error {
-// 	return delete(user, key)
-// }
-//
-//Save saves the snippet
+func (s Snippets) Own() Snippets {
+	var ownSnippets []*SnippetInfo
+	for _, snippet := range s {
+		if !snippet.SharedBySomeone {
+			ownSnippets = append(ownSnippets, snippet)
+		}
+	}
+	return ownSnippets
+}
+
+func (s Snippets) Others() Snippets {
+	var otherSnippets []*SnippetInfo
+	for _, snippet := range s {
+		if snippet.SharedBySomeone {
+			otherSnippets = append(otherSnippets, snippet)
+		}
+	}
+	return otherSnippets
+}
+
+func (s Snippets) Reverse() Snippets {
+	for i := 0; i < len(s)/2; i++ {
+		j := len(s) - i - 1
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
 
 func (s *SnippetInfo) BucketName() string {
 	return "manager"
@@ -71,24 +85,4 @@ func (s *SnippetInfo) ID() string {
 
 func (s *SnippetInfo) Value() interface{} {
 	return s
-}
-
-func (s Snippets) Own() []*SnippetInfo {
-	var ownSnippets []*SnippetInfo
-	for _, snippet := range s {
-		if !snippet.SharedBySomeone {
-			ownSnippets = append(ownSnippets, snippet)
-		}
-	}
-	return ownSnippets
-}
-
-func (s Snippets) Others() []*SnippetInfo {
-	var otherSnippets []*SnippetInfo
-	for _, snippet := range s {
-		if snippet.SharedBySomeone {
-			otherSnippets = append(otherSnippets, snippet)
-		}
-	}
-	return otherSnippets
 }
