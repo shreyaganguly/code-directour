@@ -82,6 +82,18 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script src="https://ace.c9.io/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script>
+    function copyToClipboard(key) {
+      $('.copyTooltip').html("Copied!");
+      console.log($(".code_"+ key).text());
+      var textarea = $("<textarea>").val($(".code_" + key).text()).height(0).appendTo(document.body).select();
+      document.execCommand('copy');
+           textarea.remove();
+    }
+    function outFunc() {
+      $('.copyTooltip').html("Copy Code!")
+    }
+  </script>
   {{yield}}
 </body>
 

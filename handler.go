@@ -137,3 +137,13 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	http.Redirect(w, r, "/all", http.StatusFound)
 }
+
+func linkHandler(w http.ResponseWriter, r *http.Request) {
+	args := mux.Vars(r)
+	snippet, err := findSnippetForUser(getUserName(r), args["key"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	renderer.HTML(w, http.StatusOK, "link", snippet)
+}
