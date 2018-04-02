@@ -32,7 +32,6 @@ func main() {
 	//TODO: add recently deleted snippet section
 	//TODO: add sharing history
 	//TODO: add show more / less in view
-	//TODO: check if references is a link
 	//TODO: remove views as html
 	// TODO: add mailgun and slackbot
 	// TODO: give link from listing of snippets to a particular snippet
@@ -47,6 +46,7 @@ func main() {
 	viewHelpers := template.FuncMap{
 		"getCode":    models.GetCode,
 		"getAceCode": models.GetAceCode,
+		"IsLink":     util.IsLink,
 	}
 	renderer = render.New(render.Options{
 		Directory:       "views",

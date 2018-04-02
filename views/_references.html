@@ -1,0 +1,6 @@
+{{ $isLink := IsLink . }}
+{{ if $isLink }}
+  <a href="{{.}}" target="_blank" class="card-link">{{.}}</a>
+{{ else }}
+  <p>{{.}}</p>
+{{ end }}

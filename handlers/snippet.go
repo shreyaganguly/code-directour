@@ -145,7 +145,7 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 
 func linkHandler(w http.ResponseWriter, r *http.Request) {
 	args := mux.Vars(r)
-	snippet, err := db.Find(util.GetUserName(r), args["key"])
+	snippet, err := db.Find(args["name"], args["key"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -18,7 +18,7 @@
       </div>
       </h6>
       <pre><code class="card-text code_{{ .Key }}" class={{ .Language | getCode }}>{{.Code}}</code></pre>
-      <a href="{{.References}}" target="_blank" class="card-link">{{.References}}</a>
+      {{template "_references" .References}}
     </div>
     </div>
   {{ end }}
