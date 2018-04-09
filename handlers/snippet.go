@@ -143,6 +143,23 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/all", http.StatusFound)
 }
 
+func shareEmailHandler(w http.ResponseWriter, r *http.Request) {
+	args := mux.Vars(r)
+	snippet, err := db.Find(util.GetUserName(r), args["key"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	models.SmtpMailer.Receiver.Address = r.PostFormValue("email")
+	models.SmtpMailer.Data = snippet
+	err = models.SmtpMailer.SendMail()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/all", http.StatusFound)
+}
+
 func linkHandler(w http.ResponseWriter, r *http.Request) {
 	args := mux.Vars(r)
 	snippet, err := db.Find(args["name"], args["key"])

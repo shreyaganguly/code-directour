@@ -33,6 +33,8 @@
           <a href="/delete/{{ .Key }}" class="btn btn-primary" id="delete">Delete</a>
           <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareModal" id="share" data-key="{{ .Key }}">Share with code-directour user</a>
           <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareLinkModal" id="sharelink" data-key="{{ .Key }}" data-name="{{ .Owner }}" data-endpoint="{{ $endpoint }}">Share Link</a>
+          <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaMail" id="shareviamail" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Link via Mail</a>
+
         </div>
       </div>
     </div>
@@ -82,16 +84,47 @@
   </div>
 </div>
 
+<div class="modal fade" id="shareViaMail" tabindex="-1" role="dialog" aria-labelledby="shareViaMailLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shareViaMailLabel">Share With Email</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" id="sharemailform" method="POST">
+          <div class="form-group">
+            <label for="email" class="col-form-label">Share With:</label>
+            <input type="text" name="email" class="form-control" id="shared-with">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Share</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 hljs.initHighlightingOnLoad();
 var recepientform;
 window.onload = function() {
         recepientform = document.getElementById("shareform");
+        emailform = document.getElementById("sharemailform");
     }
 $('#shareModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget)
   var recepient = button.data('key')
   recepientform.action = "/share/"+ recepient;
+})
+$('#shareViaMail').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var recepient = button.data('key')
+  emailform.action = "/sharemail/"+ recepient;
 })
 $('#shareLinkModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget)

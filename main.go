@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"net/mail"
 	"time"
 
 	"github.com/shreyaganguly/code-directour/db"
@@ -16,10 +17,16 @@ import (
 )
 
 var (
-	dbPath   = flag.String("db", "directour.db", "File to store the db")
-	host     = flag.String("b", "0.0.0.0", "Host to start your code-directeur")
-	port     = flag.Int("p", 8080, "Port to start your code-directeur")
-	endpoint = flag.String("e", "http://0.0.0.0:8080", "Endpoint that will be shared in the link")
+	dbPath          = flag.String("db", "directour.db", "File to store the db")
+	host            = flag.String("b", "0.0.0.0", "Host to start your code-directeur")
+	port            = flag.Int("p", 8080, "Port to start your code-directeur")
+	endpoint        = flag.String("e", "http://0.0.0.0:8080", "Endpoint that will be shared in the link")
+	smtpServer      = flag.String("s", "smtp.gmail.com", "Host name of the SMTP Server")
+	smtpPort        = flag.Int("t", 587, "SMTP port")
+	smptpUser       = flag.String("u", "", "Username for SMTP authentication")
+	smtpPassword    = flag.String("w", "", "Password for SMTP authentication")
+	mailSenderName  = flag.String("sendername", "Code Directour", "Sender name")
+	mailSenderEmail = flag.String("sendermail", "no-reply@code-directour.com", "Sender email")
 )
 
 var (
@@ -41,6 +48,10 @@ func main() {
 	// TODO: add date created/modified in the listing section
 	//TODO: change name of functions and methods and bucketnames
 	// TODO: add comments for exported functions
+	//TODO: add validations
+	//TODO: add name along with email while sharing content through mail
+	// TODO: show error message or success messages
+	// TODO: case independent user names
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	viewHelpers := template.FuncMap{
@@ -58,6 +69,7 @@ func main() {
 	})
 	util.SetRenderer(renderer)
 	util.SetEndpoint(*endpoint)
+	models.NewMailer(*smtpServer, *smtpPort, mail.Address{Name: *mailSenderName, Address: *mailSenderEmail}, mail.Address{}, *smptpUser, *smtpPassword, nil)
 	err := db.Init(*dbPath)
 	if err != nil {
 		log.Fatal("Problem in initializing db  ", err)
