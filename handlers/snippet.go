@@ -23,10 +23,14 @@ func snippetsHandler(w http.ResponseWriter, r *http.Request) {
 		SnippetInfos models.Snippets
 		ErrorMessage string
 		Endpoint     string
+		MailEnabled  bool
+		SlackEnabled bool
 	}{
 		snippets.Own().Reverse(),
 		"",
 		util.Endpoint,
+		models.MailEnabled,
+		SlackEnabled,
 	}
 	util.Renderer.HTML(w, http.StatusOK, "all", data)
 }
@@ -121,10 +125,14 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 			SnippetInfos models.Snippets
 			ErrorMessage string
 			Endpoint     string
+			MailEnabled  bool
+			SlackEnabled bool
 		}{
 			snippets.Own().Reverse(),
 			"This User does not have a code-directour account!!!",
 			util.Endpoint,
+			models.MailEnabled,
+			SlackEnabled,
 		}
 		util.Renderer.HTML(w, http.StatusOK, "all", data)
 		return
@@ -153,6 +161,21 @@ func shareEmailHandler(w http.ResponseWriter, r *http.Request) {
 	models.SmtpMailer.Receiver.Address = r.PostFormValue("email")
 	models.SmtpMailer.Data = snippet
 	err = models.SmtpMailer.SendMail()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	http.Redirect(w, r, "/all", http.StatusFound)
+}
+
+func shareSlackHandler(w http.ResponseWriter, r *http.Request) {
+	args := mux.Vars(r)
+	snippet, err := db.Find(util.GetUserName(r), args["key"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = UploadSnippet(snippet, r.PostFormValue("name"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

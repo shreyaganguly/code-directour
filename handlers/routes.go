@@ -22,6 +22,7 @@ func SetUpRoutes() http.Handler {
 	r.HandleFunc("/delete/{key}", interceptors.AuthenticationMiddleware(deleteHandler)).Methods("GET")
 	r.HandleFunc("/share/{key}", interceptors.AuthenticationMiddleware(shareHandler)).Methods("POST")
 	r.HandleFunc("/sharemail/{key}", interceptors.AuthenticationMiddleware(shareEmailHandler)).Methods("POST")
+	r.HandleFunc("/shareslack/{key}", interceptors.AuthenticationMiddleware(shareSlackHandler)).Methods("POST")
 	r.HandleFunc("/link/{key}/{name}", linkHandler).Methods("GET")
 	r.HandleFunc("/save", interceptors.AuthenticationMiddleware(saveHandler)).Methods("POST")
 	return r

@@ -27,6 +27,7 @@ var (
 	smtpPassword    = flag.String("w", "", "Password for SMTP authentication")
 	mailSenderName  = flag.String("sendername", "Code Directour", "Sender name")
 	mailSenderEmail = flag.String("sendermail", "no-reply@code-directour.com", "Sender email")
+	token           = flag.String("token", "", "Slack Token for code-directour bot")
 )
 
 var (
@@ -52,6 +53,9 @@ func main() {
 	//TODO: add name along with email while sharing content through mail
 	// TODO: show error message or success messages
 	// TODO: case independent user names
+	//TODO: handle slack errors more elegantly
+	//TODO: all errors to be passed by ajax call
+
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	viewHelpers := template.FuncMap{
@@ -79,6 +83,8 @@ func main() {
 		log.Fatal("Problem in loadLocation  ", err)
 	}
 	models.SetLocation(location)
+	handlers.SetSlackClient(*token)
+	handlers.MakeSlackUserMap()
 	log.Println("Starting code-directour at ", addr)
 	err = http.ListenAndServe(addr, handlers.SetUpRoutes())
 	if err != nil {

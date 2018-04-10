@@ -1,4 +1,6 @@
 {{ $endpoint := .Endpoint }}
+{{ $mailEnabled := .MailEnabled }}
+{{ $slackEnabled := .SlackEnabled }}
 <div class="container" style="padding:20px;">
   {{ if ne .ErrorMessage ""}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -33,8 +35,12 @@
           <a href="/delete/{{ .Key }}" class="btn btn-primary" id="delete">Delete</a>
           <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareModal" id="share" data-key="{{ .Key }}">Share with code-directour user</a>
           <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareLinkModal" id="sharelink" data-key="{{ .Key }}" data-name="{{ .Owner }}" data-endpoint="{{ $endpoint }}">Share Link</a>
-          <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaMail" id="shareviamail" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Link via Mail</a>
-
+          {{ if $mailEnabled }}
+            <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaMail" id="shareviamail" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Mail</a>
+          {{ end }}
+          {{ if $slackEnabled }}
+            <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaSlack" id="shareviaslack" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Slack</a>
+          {{ end }}
         </div>
       </div>
     </div>
@@ -109,12 +115,39 @@
   </div>
 </div>
 
+<div class="modal fade" id="shareViaSlack" tabindex="-1" role="dialog" aria-labelledby="shareViaSlackLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="shareViaSlackLabel">Share Via Slack</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" id="shareslackform" method="POST">
+          <div class="form-group">
+            <label for="name" class="col-form-label">Share With:</label>
+            <input type="text" name="name" class="form-control" id="shared-with" placeholder="Enter Slack User ID">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Share</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
 hljs.initHighlightingOnLoad();
 var recepientform;
 window.onload = function() {
         recepientform = document.getElementById("shareform");
         emailform = document.getElementById("sharemailform");
+        slackform = document.getElementById("shareslackform");
     }
 $('#shareModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget)
@@ -125,6 +158,11 @@ $('#shareViaMail').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget)
   var recepient = button.data('key')
   emailform.action = "/sharemail/"+ recepient;
+})
+$('#shareViaSlack').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var recepient = button.data('key')
+  slackform.action = "/shareslack/"+ recepient;
 })
 $('#shareLinkModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget)
@@ -137,5 +175,4 @@ $('#shareLinkModal').on('show.bs.modal', function (event) {
   modal.find('.modal-body p').text(shareLink)
 })
 
-</script>
 </script>

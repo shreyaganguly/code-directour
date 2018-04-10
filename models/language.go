@@ -2,19 +2,20 @@ package models
 
 //Language contains structure for language
 type Language struct {
-	Code    string
-	AceCode string
-	Name    string
+	Code          string
+	AceCode       string
+	SlackFileType string
+	Name          string
 }
 
 //Languages contain array of languages
 var Languages = []*Language{
-	&Language{"c", "c_cpp", "C"},
-	&Language{"css", "css", "CSS"},
-	&Language{"go", "golang", "Go"},
-	&Language{"html", "html", "HTML"},
-	&Language{"javascript", "javascript", "Javascript"},
-	&Language{"javascript", "json", "JSON"},
+	&Language{"c", "c_cpp", "c", "C"},
+	&Language{"css", "css", "css", "CSS"},
+	&Language{"go", "golang", "go", "Go"},
+	&Language{"html", "html", "html", "HTML"},
+	&Language{"javascript", "javascript", "javascript", "Javascript"},
+	&Language{"javascript", "json", "javascript", "JSON"},
 }
 
 func getLanguage(acecode string) string {
@@ -42,4 +43,13 @@ func GetAceCode(language string) string {
 		}
 	}
 	return "bash"
+}
+
+func GetSlackFileType(language string) string {
+	for _, v := range Languages {
+		if v.Name == language {
+			return v.SlackFileType
+		}
+	}
+	return "auto"
 }

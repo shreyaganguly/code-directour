@@ -18,6 +18,7 @@ type Mailer struct {
 }
 
 var SmtpMailer Mailer
+var MailEnabled bool
 
 const tpl = `
 <!DOCTYPE html>
@@ -52,6 +53,9 @@ func NewMailer(server string, port int, sender, receiver mail.Address, userName,
 		PortNumber: port,
 		Auth:       smtp.PlainAuth("", userName, secret, server),
 		Data:       s,
+	}
+	if secret != "" && userName != "" {
+		MailEnabled = true
 	}
 }
 
@@ -91,5 +95,6 @@ func (m *Mailer) ServerName() string {
 }
 
 func (m *Mailer) SendMail() error {
+	fmt.Println("Sending mail to ", m.Receiver)
 	return smtp.SendMail(m.ServerName(), m.Auth, m.Sender.Address, []string{m.Receiver.Address}, m.MailBody())
 }
