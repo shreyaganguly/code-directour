@@ -18,16 +18,16 @@ import (
 
 var (
 	dbPath          = flag.String("db", "directour.db", "File to store the db")
-	host            = flag.String("b", "0.0.0.0", "Host to start your code-directeur")
-	port            = flag.Int("p", 8080, "Port to start your code-directeur")
+	host            = flag.String("b", "0.0.0.0", "Host to start your code-directour")
+	port            = flag.Int("p", 8080, "Port to start your code-directour")
 	endpoint        = flag.String("e", "http://0.0.0.0:8080", "Endpoint that will be shared in the link")
 	smtpServer      = flag.String("s", "smtp.gmail.com", "Host name of the SMTP Server")
 	smtpPort        = flag.Int("t", 587, "SMTP port")
-	smptpUser       = flag.String("u", "", "Username for SMTP authentication")
-	smtpPassword    = flag.String("w", "", "Password for SMTP authentication")
+	smptpUser       = flag.String("u", "", "Username for SMTP authentication (If not passed sharing code snippets through email is disabled)")
+	smtpPassword    = flag.String("w", "", "Password for SMTP authentication (If not passed sharing code snippets through email is disabled)")
 	mailSenderName  = flag.String("sendername", "Code Directour", "Sender name")
 	mailSenderEmail = flag.String("sendermail", "no-reply@code-directour.com", "Sender email")
-	token           = flag.String("token", "", "Slack Token for code-directour bot")
+	token           = flag.String("token", "", "Slack Token for code-directour bot (If not passed sharing code snippets through slack is disabled)")
 )
 
 var (

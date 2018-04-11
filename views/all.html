@@ -13,9 +13,9 @@
   <a class="btn btn-sm btn-primary float-right" style="margin-bottom:8px;margin-left:8px;" href="/index">Home</a>
   <a class="btn btn-sm btn-primary float-right" style="margin-bottom:8px;margin-left:8px;" href="/new">New snippet</a>
   {{ $length := len .SnippetInfos }} {{ if eq $length 0 }}
-  <div class="card" style="width:100%;text-align:center;margin-top:100px; ">
-    <h3 style="text-align:center;margin:100px;"> No Snippets Found! </h3>
-  </div>
+    <div class="card" style="width:100%;text-align:center;margin-top:100px; ">
+      <h3 style="text-align:center;margin:100px;"> No Snippets Found! </h3>
+    </div>
   {{ end }}
   {{ range .SnippetInfos }}
     <div class="card" style="width: 100%;">
@@ -59,7 +59,7 @@
         <form action="" id="shareform" method="POST">
           <div class="form-group">
             <label for="recipient-name" class="col-form-label required">User Name</label>
-            <input type="text" name="recepient" class="form-control" id="shared-with" required placeholder="Enter code-directeur user name">
+            <input type="text" name="recepient" class="form-control" id="shared-with" required placeholder="Enter code-directour user name">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -144,39 +144,37 @@
   </div>
 </div>
 
-
 <script>
-hljs.initHighlightingOnLoad();
-var recepientform;
-window.onload = function() {
-        recepientform = document.getElementById("shareform");
-        emailform = document.getElementById("sharemailform");
-        slackform = document.getElementById("shareslackform");
-    }
-$('#shareModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget)
-  var recepient = button.data('key')
-  recepientform.action = "/share/"+ recepient;
-})
-$('#shareViaMail').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget)
-  var recepient = button.data('key')
-  emailform.action = "/sharemail/"+ recepient;
-})
-$('#shareViaSlack').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget)
-  var recepient = button.data('key')
-  slackform.action = "/shareslack/"+ recepient;
-})
-$('#shareLinkModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget)
-  var link = button.data('key')
-  var name = button.data('name')
-  var endpoint = button.data('endpoint')
-  console.log(endpoint);
-  shareLink = endpoint + "/link/" + link + "/" + name
-  var modal = $(this)
-  modal.find('.modal-body p').text(shareLink)
-})
-
+  hljs.initHighlightingOnLoad();
+  var recepientform;
+  window.onload = function() {
+          recepientform = document.getElementById("shareform");
+          emailform = document.getElementById("sharemailform");
+          slackform = document.getElementById("shareslackform");
+      }
+  $('#shareModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var recepient = button.data('key')
+    recepientform.action = "/share/"+ recepient;
+  })
+  $('#shareViaMail').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var recepient = button.data('key')
+    emailform.action = "/sharemail/"+ recepient;
+  })
+  $('#shareViaSlack').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var recepient = button.data('key')
+    slackform.action = "/shareslack/"+ recepient;
+  })
+  $('#shareLinkModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget)
+    var link = button.data('key')
+    var name = button.data('name')
+    var endpoint = button.data('endpoint')
+    console.log(endpoint);
+    shareLink = endpoint + "/link/" + link + "/" + name
+    var modal = $(this)
+    modal.find('.modal-body p').text(shareLink)
+  })
 </script>
