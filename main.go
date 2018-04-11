@@ -41,7 +41,6 @@ func main() {
 	//TODO: add sharing history
 	//TODO: add show more / less in view
 	//TODO: remove views as html
-	// TODO: add mailgun and slackbot
 	// TODO: give link from listing of snippets to a particular snippet
 	// TODO: give share action in overflow button
 	//TODO: make edit and delete post request
@@ -84,7 +83,10 @@ func main() {
 	}
 	models.SetLocation(location)
 	handlers.SetSlackClient(*token)
-	handlers.MakeSlackUserMap()
+	if *token != "" {
+		handlers.MakeSlackUserMap()
+
+	}
 	log.Println("Starting code-directour at ", addr)
 	err = http.ListenAndServe(addr, handlers.SetUpRoutes())
 	if err != nil {

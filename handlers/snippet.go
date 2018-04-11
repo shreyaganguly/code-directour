@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"net/mail"
 
 	"github.com/gorilla/mux"
 	"github.com/shreyaganguly/code-directour/db"
@@ -158,7 +159,11 @@ func shareEmailHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	models.SmtpMailer.Receiver.Address = r.PostFormValue("email")
+
+	models.SmtpMailer.Receiver = mail.Address{
+		Address: r.PostFormValue("email"),
+		Name:    r.PostFormValue("name"),
+	}
 	models.SmtpMailer.Data = snippet
 	err = models.SmtpMailer.SendMail()
 	if err != nil {

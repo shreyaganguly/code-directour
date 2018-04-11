@@ -50,7 +50,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="shareModalLabel">Share With</h5>
+        <h5 class="modal-title" id="shareModalLabel">Share With Code Directour User</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -58,8 +58,8 @@
       <div class="modal-body">
         <form action="" id="shareform" method="POST">
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Share With:</label>
-            <input type="text" name="recepient" class="form-control" id="shared-with">
+            <label for="recipient-name" class="col-form-label required">User Name</label>
+            <input type="text" name="recepient" class="form-control" id="shared-with" required placeholder="Enter code-directeur user name">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -94,7 +94,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="shareViaMailLabel">Share With Email</h5>
+        <h5 class="modal-title" id="shareViaMailLabel">Share Via Email</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -102,8 +102,12 @@
       <div class="modal-body">
         <form action="" id="sharemailform" method="POST">
           <div class="form-group">
-            <label for="email" class="col-form-label">Share With:</label>
-            <input type="text" name="email" class="form-control" id="shared-with">
+            <label for="name" class="col-form-label">Name</label>
+            <input type="text" name="name" class="form-control" id="shared-with" placeholder="Enter Name to share with">
+          </div>
+          <div class="form-group">
+            <label for="email" class="col-form-label required">Email ID</label>
+            <input type="text" name="email" class="form-control" id="shared-with" required placeholder="Enter Email ID to share with">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -127,8 +131,8 @@
       <div class="modal-body">
         <form action="" id="shareslackform" method="POST">
           <div class="form-group">
-            <label for="name" class="col-form-label">Share With:</label>
-            <input type="text" name="name" class="form-control" id="shared-with" placeholder="Enter Slack User ID">
+            <label for="name" class="col-form-label required">Slack User ID</label>
+            <input type="text" name="name" class="form-control" id="shared-with" required placeholder="Enter Slack User ID">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
