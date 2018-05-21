@@ -42,6 +42,8 @@
             <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaSlack" id="shareviaslack" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Slack</a>
           {{ end }}
         </div>
+        <div class="card-footer text-muted timestamp" id="{{ .CreatedAt }}" data-createdat="{{ .CreatedAt }}" data-modifiedat="{{ .ModifiedAt }}">
+        </div>
       </div>
     </div>
   {{ end }}
@@ -177,4 +179,8 @@
     var modal = $(this)
     modal.find('.modal-body p').text(shareLink)
   })
+  moment.locale('en');
+  $('div.timestamp').each(function(i, d) {
+        document.getElementById(d.id).innerHTML = "<b>Modified At:</b> " + moment(parseInt(d.dataset.modifiedat)*1000).fromNow() + "<br></br>" + "<b>Created At:</b> " + moment(parseInt(d.dataset.createdat)*1000).fromNow();
+    });
 </script>

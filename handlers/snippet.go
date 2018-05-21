@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"net/mail"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/shreyaganguly/code-directour/db"
@@ -76,7 +77,6 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	if r.FormValue("key") != "" {
 		snippet, err = db.Find(util.GetUserName(r), r.FormValue("key"))
 		if err != nil {
@@ -92,6 +92,7 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		snippet.Language = r.FormValue("language")
 		snippet.Code = r.FormValue("code")
 		snippet.References = r.FormValue("references")
+		snippet.ModifiedAt = time.Now().Unix()
 	} else {
 		snippet = models.NewSnippet(util.GetUserName(r), r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"), false, "", false, "")
 	}

@@ -54,7 +54,7 @@ func main() {
 	// TODO: case independent user names
 	//TODO: handle slack errors more elegantly
 	//TODO: all errors to be passed by ajax call
-
+	//TODO: add more languages
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	viewHelpers := template.FuncMap{

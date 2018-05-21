@@ -25,6 +25,9 @@ type SnippetInfo struct {
 	SharedBy        string
 	SharedToSomeone bool
 	SharedTo        string
+	CreatedAt       int64
+	ModifiedAt      int64
+	DeletedAt       int64
 }
 
 // Snippets is the type for array of snippets
@@ -44,6 +47,8 @@ func NewSnippet(owner, title, language, code, references string, sharedBySomeone
 		SharedBy:        sharedBy,
 		SharedToSomeone: sharedToSomeone,
 		SharedTo:        sharedTo,
+		CreatedAt:       time.Now().Unix(),
+		ModifiedAt:      time.Now().Unix(),
 	}
 }
 
