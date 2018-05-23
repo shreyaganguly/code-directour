@@ -16,6 +16,7 @@ func SetUpRoutes() http.Handler {
 	r.HandleFunc("/saveuser", saveUserHandler).Methods("POST")
 	r.HandleFunc("/all", interceptors.AuthenticationMiddleware(snippetsHandler)).Methods("GET")
 	r.HandleFunc("/shared", interceptors.AuthenticationMiddleware(shareListHandler)).Methods("GET")
+	r.HandleFunc("/sharedto", interceptors.AuthenticationMiddleware(sharedToListHandler)).Methods("GET")
 	r.HandleFunc("/index", interceptors.AuthenticationMiddleware(indexHandler)).Methods("GET")
 	r.HandleFunc("/new", interceptors.AuthenticationMiddleware(newHandler)).Methods("GET")
 	r.HandleFunc("/edit/{key}", interceptors.AuthenticationMiddleware(editHandler)).Methods("GET")

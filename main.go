@@ -58,9 +58,10 @@ func main() {
 	flag.Parse()
 	addr := fmt.Sprintf("%s:%d", *host, *port)
 	viewHelpers := template.FuncMap{
-		"getCode":    models.GetCode,
-		"getAceCode": models.GetAceCode,
-		"IsLink":     util.IsLink,
+		"getCode":        models.GetCode,
+		"getAceCode":     models.GetAceCode,
+		"IsLink":         util.IsLink,
+		"SharedtoString": util.GenerateSharedTo,
 	}
 	renderer = render.New(render.Options{
 		Directory:       "views",

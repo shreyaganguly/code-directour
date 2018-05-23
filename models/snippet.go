@@ -24,17 +24,22 @@ type SnippetInfo struct {
 	SharedBySomeone bool
 	SharedBy        string
 	SharedToSomeone bool
-	SharedTo        string
+	SharedTo        []*ShareInfo
 	CreatedAt       int64
 	ModifiedAt      int64
 	DeletedAt       int64
+}
+
+type ShareInfo struct {
+	Method   string
+	SharedTo string
 }
 
 // Snippets is the type for array of snippets
 type Snippets []*SnippetInfo
 
 //NewSnippet creates new snippet
-func NewSnippet(owner, title, language, code, references string, sharedBySomeone bool, sharedBy string, sharedToSomeone bool, sharedTo string) *SnippetInfo {
+func NewSnippet(owner, title, language, code, references string, sharedBySomeone bool, sharedBy string, sharedToSomeone bool, sharedTo []*ShareInfo) *SnippetInfo {
 	return &SnippetInfo{
 		Owner:           owner,
 		Key:             uniuri.New(),
@@ -66,6 +71,16 @@ func (s Snippets) Others() Snippets {
 	var otherSnippets []*SnippetInfo
 	for _, snippet := range s {
 		if snippet.SharedBySomeone {
+			otherSnippets = append(otherSnippets, snippet)
+		}
+	}
+	return otherSnippets
+}
+
+func (s Snippets) SharedTo() Snippets {
+	var otherSnippets []*SnippetInfo
+	for _, snippet := range s {
+		if snippet.SharedToSomeone {
 			otherSnippets = append(otherSnippets, snippet)
 		}
 	}

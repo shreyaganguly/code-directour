@@ -94,7 +94,7 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		snippet.References = r.FormValue("references")
 		snippet.ModifiedAt = time.Now().Unix()
 	} else {
-		snippet = models.NewSnippet(util.GetUserName(r), r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"), false, "", false, "")
+		snippet = models.NewSnippet(util.GetUserName(r), r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"), false, "", false, nil)
 	}
 	err = db.Update(snippet)
 	if err != nil {
@@ -111,6 +111,15 @@ func shareListHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	util.Renderer.HTML(w, http.StatusOK, "sharedlist", snippets.Others().Reverse())
+}
+
+func sharedToListHandler(w http.ResponseWriter, r *http.Request) {
+	snippets, err := db.All(util.GetUserName(r))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	util.Renderer.HTML(w, http.StatusOK, "sharedlist", snippets.SharedTo().Reverse())
 }
 
 func shareHandler(w http.ResponseWriter, r *http.Request) {
@@ -139,12 +148,12 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 		util.Renderer.HTML(w, http.StatusOK, "all", data)
 		return
 	}
-	snippet, err := db.FindAndUpdate(util.GetUserName(r), args["key"], recepient)
+	snippet, err := db.FindAndUpdate(util.GetUserName(r), args["key"], &models.ShareInfo{SharedTo: recepient, Method: "code-directour"})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	sharedSnippet := models.NewSnippet(recepient, snippet.Title, snippet.Language, snippet.Code, snippet.References, true, util.GetUserName(r), false, "")
+	sharedSnippet := models.NewSnippet(recepient, snippet.Title, snippet.Language, snippet.Code, snippet.References, true, util.GetUserName(r), false, nil)
 	err = db.Update(sharedSnippet)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -171,6 +180,11 @@ func shareEmailHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	_, err = db.FindAndUpdate(util.GetUserName(r), args["key"], &models.ShareInfo{SharedTo: r.PostFormValue("email"), Method: "email"})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	http.Redirect(w, r, "/all", http.StatusFound)
 }
 
@@ -186,6 +200,12 @@ func shareSlackHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	_, err = db.FindAndUpdate(util.GetUserName(r), args["key"], &models.ShareInfo{SharedTo: r.PostFormValue("name"), Method: "slack"})
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	http.Redirect(w, r, "/all", http.StatusFound)
 }
 

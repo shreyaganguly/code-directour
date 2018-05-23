@@ -196,7 +196,7 @@ func Find(name, key string) (*models.SnippetInfo, error) {
 	return nil, errors.New(" Snippet Not found")
 }
 
-func FindAndUpdate(name, key, sharedTo string) (*models.SnippetInfo, error) {
+func FindAndUpdate(name, key string, sharedTo *models.ShareInfo) (*models.SnippetInfo, error) {
 	var snippetInfos []*models.SnippetInfo
 	if err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("manager"))
@@ -221,7 +221,7 @@ func FindAndUpdate(name, key, sharedTo string) (*models.SnippetInfo, error) {
 		if snippet.Key == key {
 			sharedSnippet = snippet
 			snippet.SharedToSomeone = true
-			snippet.SharedTo = sharedTo
+			snippet.SharedTo = append(snippet.SharedTo, sharedTo)
 		}
 
 	}

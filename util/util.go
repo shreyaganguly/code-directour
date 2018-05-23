@@ -1,8 +1,12 @@
 package util
 
 import (
+	"fmt"
 	"net/url"
+	"regexp"
+	"strings"
 
+	"github.com/shreyaganguly/code-directour/models"
 	"github.com/unrolled/render"
 )
 
@@ -28,4 +32,14 @@ func IsLink(u string) bool {
 		return false
 	}
 	return true
+}
+
+func GenerateSharedTo(shareInfos []*models.ShareInfo) string {
+	var s []string
+	for _, shareinfo := range shareInfos {
+		s = append(s, fmt.Sprintf(" %s (via %s)", shareinfo.SharedTo, shareinfo.Method))
+	}
+	reStr := regexp.MustCompile(",([^,]*)$")
+	repStr := " and $1"
+	return reStr.ReplaceAllString(strings.Join(s, ","), repStr)
 }
