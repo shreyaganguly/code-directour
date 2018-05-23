@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"net/mail"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -124,7 +125,7 @@ func sharedToListHandler(w http.ResponseWriter, r *http.Request) {
 
 func shareHandler(w http.ResponseWriter, r *http.Request) {
 	args := mux.Vars(r)
-	recepient := r.PostFormValue("recepient")
+	recepient := strings.ToLower(r.PostFormValue("recepient"))
 	userExists := db.UserExists(recepient)
 	if !userExists {
 		snippets, err := db.All(util.GetUserName(r))

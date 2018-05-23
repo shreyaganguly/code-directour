@@ -2,6 +2,7 @@ package util
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/securecookie"
 )
@@ -41,5 +42,5 @@ func GetUserName(request *http.Request) (userName string) {
 			userName = cookieValue["name"]
 		}
 	}
-	return userName
+	return strings.ToLower(userName)
 }

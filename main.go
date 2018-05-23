@@ -51,7 +51,6 @@ func main() {
 	//TODO: add validations
 	//TODO: add name along with email while sharing content through mail
 	// TODO: show error message or success messages
-	// TODO: case independent user names
 	//TODO: handle slack errors more elegantly
 	//TODO: all errors to be passed by ajax call
 	//TODO: add more languages
