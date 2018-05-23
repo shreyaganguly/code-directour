@@ -20,6 +20,9 @@
       <pre><code class="card-text code_{{ .Key }}" class={{ .Language | getCode }}>{{.Code}}</code></pre>
       {{template "_references" .References}}
     </div>
+    <div class="card-footer text-muted timestamp">
+      Shared By {{ .SharedBy }}
+    </div>
     </div>
   {{ end }}
 </div>
