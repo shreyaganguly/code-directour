@@ -38,14 +38,12 @@ var (
 func main() {
 	//TODO : change view structure
 	//TODO: add recently deleted snippet section
-	//TODO: add sharing history
 	//TODO: add show more / less in view
 	//TODO: remove views as html
 	// TODO: give link from listing of snippets to a particular snippet
 	// TODO: give share action in overflow button
 	//TODO: make edit and delete post request
 	//TODO: refactor code
-	// TODO: add date created/modified in the listing section
 	//TODO: change name of functions and methods and bucketnames
 	// TODO: add comments for exported functions
 	//TODO: add validations
