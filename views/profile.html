@@ -3,8 +3,8 @@
     <h4 class="profileheadings"> Link Settings </h4>
     <div class="form-group">
       <label for="endpoint" class="required">Link Endpoint</label>
-      <input type="text" class="form-control" name="endpoint" aria-describedby="endpointHelp" placeholder="https://code-directour.com" required>
-      <small id="endpointHelp" class="form-text text-muted">The link endpoint with which you can share the snippets with your colleagues</small>
+      <input type="text" class="form-control" name="endpoint" aria-describedby="endpointHelp" placeholder="https://code-directour.com" value="{{ .Endpoint}}">
+      <small id="endpointHelp" class="form-text text-muted"><b>The link endpoint with which you can share the snippets with your colleagues. Please fill this to enable Sharing By Link</b></small>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
     <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>

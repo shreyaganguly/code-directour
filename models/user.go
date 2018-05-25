@@ -4,6 +4,7 @@ package models
 type User struct {
 	Name     string
 	Password string
+	Endpoint string
 }
 
 //NewUser creates new user

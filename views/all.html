@@ -1,4 +1,4 @@
-{{ $endpoint := GetEndpoint }}
+{{ $endpoint := .User.Endpoint }}
 {{ $mailEnabled := .MailEnabled }}
 {{ $slackEnabled := .SlackEnabled }}
 <div class="container" style="padding:20px;">

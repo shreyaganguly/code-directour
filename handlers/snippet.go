@@ -22,16 +22,21 @@ func snippetsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	user, err := db.LookupinUser(util.GetUserName(r))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	data := struct {
 		SnippetInfos models.Snippets
 		ErrorMessage string
-		Endpoint     string
+		User         *models.User
 		MailEnabled  bool
 		SlackEnabled bool
 	}{
 		snippets.Own().Reverse(),
 		"",
-		util.Endpoint,
+		user,
 		models.MailEnabled,
 		SlackEnabled,
 	}
@@ -133,16 +138,21 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		user, err := db.LookupinUser(util.GetUserName(r))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		data := struct {
 			SnippetInfos models.Snippets
 			ErrorMessage string
-			Endpoint     string
+			User         *models.User
 			MailEnabled  bool
 			SlackEnabled bool
 		}{
 			snippets.Own().Reverse(),
 			"This User does not have a code-directour account!!!",
-			util.Endpoint,
+			user,
 			models.MailEnabled,
 			SlackEnabled,
 		}
