@@ -21,6 +21,10 @@ func SetEndpoint(e string) {
 	Endpoint = e
 }
 
+func GetEndpoint() string {
+	return Endpoint
+}
+
 func IsLink(u string) bool {
 	parsed, err := url.ParseRequestURI(u)
 

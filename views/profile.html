@@ -3,50 +3,53 @@
     <h4 class="profileheadings"> Link Settings </h4>
     <div class="form-group">
       <label for="endpoint" class="required">Link Endpoint</label>
-      <input type="text" class="form-control" id="endpoint" aria-describedby="endpointHelp" placeholder="https://code-directour.com" required>
+      <input type="text" class="form-control" name="endpoint" aria-describedby="endpointHelp" placeholder="https://code-directour.com" required>
       <small id="endpointHelp" class="form-text text-muted">The link endpoint with which you can share the snippets with your colleagues</small>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
+    <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
   <form class="form-horizontal" action="/profile/email/save" method="POST">
     <h4 class="profileheadings"> Email Settings </h4>
     <div class="form-group">
       <label for="server" class="required">SMTP Server</label>
-      <input type="text" class="form-control" id="server" placeholder="smtp.gmail.com" required>
+      <input type="text" class="form-control" name="server" placeholder="smtp.gmail.com" required>
     </div>
     <div class="form-group">
       <label for="port" class="required">SMTP Port</label>
-      <input type="port" class="form-control" id="port" aria-describedby="emailHelp" placeholder="587" required>
+      <input type="port" class="form-control" name="port" aria-describedby="emailHelp" placeholder="587" required>
     </div>
     <div class="form-group">
       <label for="email" class="required">Email Address</label>
-      <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="abc@gmail.com" required>
+      <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="abc@gmail.com" required>
       <small id="emailHelp" class="form-text text-muted">Email Address which will send the emails</small>
     </div>
     <div class="form-group">
       <label for="password" class="required">Email Password</label>
-      <input type="password" class="form-control" id="password" aria-describedby="passwordHelp" placeholder="**********" required>
+      <input type="password" class="form-control" name="password" aria-describedby="passwordHelp" placeholder="**********" required>
       <small id="passwordHelp" class="form-text text-muted">Refer to README.md for details.</small>
     </div>
     <div class="form-group">
       <label for="sendername">Sender Name</label>
-      <input type="text" class="form-control" id="sendername" aria-describedby="sendernameHelp" placeholder="Code Directour">
+      <input type="text" class="form-control" name="sendername" aria-describedby="sendernameHelp" placeholder="Code Directour">
       <small id="sendernameHelp" class="form-text text-muted">Sender Name to show in the emails</small>
     </div>
     <div class="form-group">
       <label for="senderemail" class="required">Sender Email</label>
-      <input type="text" class="form-control" id="senderemail" aria-describedby="senderemailHelp" placeholder="no-reply@code-directour.com" required>
+      <input type="text" class="form-control" name="senderemail" aria-describedby="senderemailHelp" placeholder="no-reply@code-directour.com" required>
       <small id="senderemailHelp" class="form-text text-muted">Sender Email to show in the emails</small>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
+    <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
-  <form class="form-horizontal" action="/profile/email/save" method="POST">
+  <form class="form-horizontal" action="/profile/slack/save" method="POST">
     <h4 class="profileheadings"> Slack Settings </h4>
     <div class="form-group">
       <label for="token" class="required">Slack Token</label>
-      <input type="text" class="form-control" id="token" aria-describedby="tokenHelp" placeholder="xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxx" required>
+      <input type="text" class="form-control" name="token" aria-describedby="tokenHelp" placeholder="xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxx" required>
       <small id="tokenHelp" class="form-text text-muted">Refer to README.md for details of generating slack bot token.</small>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
+    <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
 </div>

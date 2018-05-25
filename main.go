@@ -20,7 +20,6 @@ var (
 	dbPath          = flag.String("db", "directour.db", "File to store the db")
 	host            = flag.String("b", "0.0.0.0", "Host to start your code-directour")
 	port            = flag.Int("p", 8080, "Port to start your code-directour")
-	endpoint        = flag.String("e", "http://0.0.0.0:8080", "Endpoint that will be shared in the link")
 	smtpServer      = flag.String("s", "smtp.gmail.com", "Host name of the SMTP Server")
 	smtpPort        = flag.Int("t", 587, "SMTP port")
 	smptpUser       = flag.String("u", "", "Username for SMTP authentication (If not passed sharing code snippets through email is disabled)")
@@ -59,6 +58,7 @@ func main() {
 		"getAceCode":     models.GetAceCode,
 		"IsLink":         util.IsLink,
 		"SharedtoString": util.GenerateSharedTo,
+		"GetEndpoint":    util.GetEndpoint,
 	}
 	renderer = render.New(render.Options{
 		Directory:       "views",
@@ -69,7 +69,6 @@ func main() {
 		RequirePartials: true,
 	})
 	util.SetRenderer(renderer)
-	util.SetEndpoint(*endpoint)
 	models.NewMailer(*smtpServer, *smtpPort, mail.Address{Name: *mailSenderName, Address: *mailSenderEmail}, mail.Address{}, *smptpUser, *smtpPassword, nil)
 	err := db.Init(*dbPath)
 	if err != nil {
