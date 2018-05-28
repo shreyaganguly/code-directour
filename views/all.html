@@ -1,6 +1,6 @@
 {{ $endpoint := .User.Endpoint }}
 {{ $mailEnabled := .MailEnabled }}
-{{ $slackEnabled := .SlackEnabled }}
+{{ $user := .User }}
 <div class="container" style="padding:20px;">
   {{ if ne .ErrorMessage ""}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -40,7 +40,7 @@
           {{ if $mailEnabled }}
             <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaMail" id="shareviamail" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Mail</a>
           {{ end }}
-          {{ if $slackEnabled }}
+          {{ if ne $user.Slack.Token ""}}
             <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaSlack" id="shareviaslack" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Slack</a>
           {{ end }}
         </div>

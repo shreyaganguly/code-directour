@@ -27,18 +27,19 @@ func snippetsHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	if user.Slack == nil {
+		user.Slack = &models.Slack{}
+	}
 	data := struct {
 		SnippetInfos models.Snippets
 		ErrorMessage string
 		User         *models.User
 		MailEnabled  bool
-		SlackEnabled bool
 	}{
 		snippets.Own().Reverse(),
 		"",
 		user,
 		models.MailEnabled,
-		SlackEnabled,
 	}
 	util.Renderer.HTML(w, http.StatusOK, "all", data)
 }
@@ -148,13 +149,11 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 			ErrorMessage string
 			User         *models.User
 			MailEnabled  bool
-			SlackEnabled bool
 		}{
 			snippets.Own().Reverse(),
 			"This User does not have a code-directour account!!!",
 			user,
 			models.MailEnabled,
-			SlackEnabled,
 		}
 		util.Renderer.HTML(w, http.StatusOK, "all", data)
 		return

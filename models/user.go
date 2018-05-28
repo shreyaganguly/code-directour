@@ -5,6 +5,11 @@ type User struct {
 	Name     string
 	Password string
 	Endpoint string
+	Slack    *Slack
+}
+
+type Slack struct {
+	Token string
 }
 
 //NewUser creates new user

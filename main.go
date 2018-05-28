@@ -26,7 +26,6 @@ var (
 	smtpPassword    = flag.String("w", "", "Password for SMTP authentication (If not passed sharing code snippets through email is disabled)")
 	mailSenderName  = flag.String("sendername", "Code Directour", "Sender name")
 	mailSenderEmail = flag.String("sendermail", "no-reply@code-directour.com", "Sender email")
-	token           = flag.String("token", "", "Slack Token for code-directour bot (If not passed sharing code snippets through slack is disabled)")
 )
 
 var (
@@ -79,11 +78,6 @@ func main() {
 		log.Fatal("Problem in loadLocation  ", err)
 	}
 	models.SetLocation(location)
-	handlers.SetSlackClient(*token)
-	if *token != "" {
-		handlers.MakeSlackUserMap()
-
-	}
 	log.Println("Starting code-directour at ", addr)
 	err = http.ListenAndServe(addr, handlers.SetUpRoutes())
 	if err != nil {

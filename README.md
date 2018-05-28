@@ -26,8 +26,6 @@ Usage of ./code-directour:
     	Host to start your code-directeur (default "0.0.0.0")
   -db string
     	File to store the db (default "directour.db")
-  -e string
-    	Endpoint that will be shared in the link (default "http://0.0.0.0:8080")
   -p int
     	Port to start your code-directour (default 8080)
   -s string

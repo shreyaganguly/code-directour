@@ -14,7 +14,7 @@ var (
 	SlackEnabled  bool
 )
 
-func MakeSlackUserMap() {
+func makeSlackUserMap() {
 	users, err := slackClient.GetUsers()
 	if err != nil {
 		log.Fatalln("Obtaining users from slack", err)
@@ -26,10 +26,12 @@ func MakeSlackUserMap() {
 }
 
 func SetSlackClient(token string) {
-	slackClient = slack.New(token)
+	slackClient = nil
 	if token != "" {
-		SlackEnabled = true
+		slackClient = slack.New(token)
+		makeSlackUserMap()
 	}
+
 }
 
 func UploadSnippet(snippet *models.SnippetInfo, receiverName string) error {
