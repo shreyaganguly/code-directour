@@ -14,6 +14,7 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	//TODO: sanitize this
 	if user.Slack == nil {
 		user.Slack = &models.Slack{}
 	}
