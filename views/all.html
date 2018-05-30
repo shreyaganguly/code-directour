@@ -1,5 +1,4 @@
 {{ $endpoint := .User.Endpoint }}
-{{ $mailEnabled := .MailEnabled }}
 {{ $user := .User }}
 <div class="container" style="padding:20px;">
   {{ if ne .ErrorMessage ""}}
@@ -37,7 +36,7 @@
           {{ if ne $endpoint "" }}
             <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareLinkModal" id="sharelink" data-key="{{ .Key }}" data-name="{{ .Owner }}" data-endpoint="{{ $endpoint }}">Share Link</a>
           {{ end }}
-          {{ if $mailEnabled }}
+          {{ if $user.Email.Enabled }}
             <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaMail" id="shareviamail" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Mail</a>
           {{ end }}
           {{ if ne $user.Slack.Token ""}}

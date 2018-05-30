@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/mail"
 	"net/smtp"
+	"strconv"
 )
 
 type Mailer struct {
@@ -18,7 +19,6 @@ type Mailer struct {
 }
 
 var SmtpMailer Mailer
-var MailEnabled bool
 
 const tpl = `
 <!DOCTYPE html>
@@ -45,17 +45,15 @@ const tpl = `
 </body>
 </html>`
 
-func NewMailer(server string, port int, sender, receiver mail.Address, userName, secret string, s *SnippetInfo) {
+func NewMailer(email *Email) {
+	port, _ := strconv.Atoi(email.Port)
 	SmtpMailer = Mailer{
-		Sender:     sender,
-		Receiver:   receiver,
-		Server:     server,
+		Sender:     mail.Address{Name: email.SenderName, Address: email.SenderEmail},
+		Receiver:   mail.Address{},
+		Server:     email.Server,
 		PortNumber: port,
-		Auth:       smtp.PlainAuth("", userName, secret, server),
-		Data:       s,
-	}
-	if secret != "" && userName != "" {
-		MailEnabled = true
+		Auth:       smtp.PlainAuth("", email.Address, email.Password, email.Server),
+		Data:       nil,
 	}
 }
 

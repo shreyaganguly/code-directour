@@ -14,10 +14,6 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	//TODO: sanitize this
-	if user.Slack == nil {
-		user.Slack = &models.Slack{}
-	}
 	util.Renderer.HTML(w, http.StatusOK, "profile", user)
 }
 
@@ -37,6 +33,19 @@ func profileSaveHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case "email":
+		user.Email = models.NewEmailSettings(r.PostFormValue("server"), r.PostFormValue("port"), r.PostFormValue("email"), r.PostFormValue("password"), r.PostFormValue("sendername"), r.PostFormValue("senderemail"))
+		models.NewMailer(user.Email)
+		if user.Email.Server != "" && user.Email.Port != "" && user.Email.Address != "" && user.Email.Password != "" {
+			user.Email.Enabled = true
+		} else {
+			user.Email.Enabled = false
+		}
+		err = db.Update(user)
+		if err != nil {
+			//TODO: cleaner error handling
+			http.Error(w, "Some error occured!!", http.StatusInternalServerError)
+			return
+		}
 	case "slack":
 		user.Slack = &models.Slack{Token: r.PostFormValue("token")}
 		err = db.Update(user)

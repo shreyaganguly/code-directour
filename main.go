@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"net/mail"
 	"time"
 
 	"github.com/shreyaganguly/code-directour/db"
@@ -17,15 +16,9 @@ import (
 )
 
 var (
-	dbPath          = flag.String("db", "directour.db", "File to store the db")
-	host            = flag.String("b", "0.0.0.0", "Host to start your code-directour")
-	port            = flag.Int("p", 8080, "Port to start your code-directour")
-	smtpServer      = flag.String("s", "smtp.gmail.com", "Host name of the SMTP Server")
-	smtpPort        = flag.Int("t", 587, "SMTP port")
-	smptpUser       = flag.String("u", "", "Username for SMTP authentication (If not passed sharing code snippets through email is disabled)")
-	smtpPassword    = flag.String("w", "", "Password for SMTP authentication (If not passed sharing code snippets through email is disabled)")
-	mailSenderName  = flag.String("sendername", "Code Directour", "Sender name")
-	mailSenderEmail = flag.String("sendermail", "no-reply@code-directour.com", "Sender email")
+	dbPath = flag.String("db", "directour.db", "File to store the db")
+	host   = flag.String("b", "0.0.0.0", "Host to start your code-directour")
+	port   = flag.Int("p", 8080, "Port to start your code-directour")
 )
 
 var (
@@ -68,7 +61,6 @@ func main() {
 		RequirePartials: true,
 	})
 	util.SetRenderer(renderer)
-	models.NewMailer(*smtpServer, *smtpPort, mail.Address{Name: *mailSenderName, Address: *mailSenderEmail}, mail.Address{}, *smptpUser, *smtpPassword, nil)
 	err := db.Init(*dbPath)
 	if err != nil {
 		log.Fatal("Problem in initializing db  ", err)
