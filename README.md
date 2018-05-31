@@ -28,33 +28,21 @@ Usage of ./code-directour:
     	File to store the db (default "directour.db")
   -p int
     	Port to start your code-directour (default 8080)
-  -s string
-    	Host name of the SMTP Server (default "smtp.gmail.com")
-  -sendermail string
-    	Sender email (default "no-reply@code-directour.com")
-  -sendername string
-    	Sender name (default "Code Directour")
-  -t int
-    	SMTP port (default 587)
-  -token string
-    	Slack Token for code-directour bot (If not passed sharing code snippets through slack is disabled)
-  -u string
-    	Username for SMTP authentication (If not passed sharing code snippets through email is disabled)
-  -w string
-    	Password for SMTP authentication (If not passed sharing code snippets through email is disabled)
 ```
 ## Getting started
 
 Start the server and sign up with a user name and password and start sharing with the world!!
 
-### Authentication
+### Profile Settings
+
+#### Enable sharing via link
+If you wish to share the code snippets via link. You **must** provide the `Link Endpoint` to see `Share By Link` option for your snippets
 
 #### Enable sharing via mail
-If you wish to use gmail as your smtp server (default) and your gmail ID is authorised with 2FA, make sure you create an [app password](https://myaccount.google.com/apppasswords) and pass it with `-w` flag.
+You **must** provide `SMTP Server`, `SMTP Port`, `Email Address`, `Email Password`, `Sender Email` to see `Share By Mail` option for your snippets. If you wish to use gmail as your smtp server (default) and your gmail ID is authorised with 2FA, make sure you create an [app password](https://myaccount.google.com/apppasswords).
 
 #### Enable sharing via slack
-If you wish to share snippets via slack make sure you create a [slack bot token](https://api.slack.com/custom-integrations/bot-users) and pass it with `-token` flag
-
+You **must** provide `Slack Token` to see `Share By Slack` option for your snippets. Make sure you create a [slack bot token](https://api.slack.com/custom-integrations/bot-users).
 
 ## License
 
