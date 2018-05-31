@@ -42,6 +42,16 @@
           {{ if ne $user.Slack.Token ""}}
             <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaSlack" id="shareviaslack" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Slack</a>
           {{ end }}
+          <div class="btn-group">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Small button
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </div>
         </div>
         <div class="card-footer text-muted timestamp" id="{{ .CreatedAt }}" data-createdat="{{ .CreatedAt }}" data-modifiedat="{{ .ModifiedAt }}">
         </div>
