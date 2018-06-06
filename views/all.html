@@ -32,24 +32,21 @@
         <div class="card-body">
           <a href="/edit/{{ .Key }}" class="btn btn-primary">Edit</a>
           <a href="/delete/{{ .Key }}" class="btn btn-primary" id="delete">Delete</a>
-          <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareModal" id="share" data-key="{{ .Key }}">Share with code-directour user</a>
-          {{ if ne $endpoint "" }}
-            <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareLinkModal" id="sharelink" data-key="{{ .Key }}" data-name="{{ .Owner }}" data-endpoint="{{ $endpoint }}">Share Link</a>
-          {{ end }}
-          {{ if $user.Email.Enabled }}
-            <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaMail" id="shareviamail" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Mail</a>
-          {{ end }}
-          {{ if ne $user.Slack.Token ""}}
-            <a href="#" class="btn btn-primary" style="cursor: pointer;" data-toggle="modal" data-target="#shareViaSlack" id="shareviaslack" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Slack</a>
-          {{ end }}
           <div class="btn-group">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Small button
+              Share
             </button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#shareModal" id="share" data-key="{{ .Key }}">Share with code-directour user</a>
+              {{ if ne $endpoint "" }}
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#shareLinkModal" id="sharelink" data-key="{{ .Key }}" data-name="{{ .Owner }}" data-endpoint="{{ $endpoint }}">Share Link</a>
+              {{ end }}
+              {{ if $user.Email.Enabled }}
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#shareViaMail" id="shareviamail" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Mail</a>
+              {{ end }}
+              {{ if ne $user.Slack.Token ""}}
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#shareViaSlack" id="shareviaslack" data-key="{{ .Key }}" data-name="{{ .Owner }}">Share Snippet via Slack</a>
+              {{ end }}
             </div>
           </div>
         </div>

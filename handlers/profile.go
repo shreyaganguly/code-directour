@@ -54,7 +54,6 @@ func profileSaveHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Some error occured!!", http.StatusInternalServerError)
 			return
 		}
-		SetSlackClient(r.PostFormValue("token"))
 
 	default:
 		http.Error(w, "Some error occured!!", http.StatusInternalServerError)

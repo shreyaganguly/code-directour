@@ -3,8 +3,10 @@ package handlers
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/nlopes/slack"
+	"github.com/shreyaganguly/code-directour/db"
 	"github.com/shreyaganguly/code-directour/models"
 )
 
@@ -25,26 +27,25 @@ func makeSlackUserMap() {
 	}
 }
 
-func SetSlackClient(token string) {
-	slackClient = nil
-	if token != "" {
-		slackClient = slack.New(token)
+func UploadSnippet(snippet *models.SnippetInfo, receiverName string) error {
+	user, err := db.LookupinUser(snippet.Owner)
+	if err != nil {
+		return err
+	}
+	if user.Slack != nil && user.Slack.Token != "" {
+		slackClient = slack.New(user.Slack.Token)
 		makeSlackUserMap()
 	}
-
-}
-
-func UploadSnippet(snippet *models.SnippetInfo, receiverName string) error {
 	id, ok := slackUsersMap[receiverName]
 	if !ok {
 		return fmt.Errorf("User %s does not exist  ", receiverName)
 	}
-	_, err := slackClient.UploadFile(slack.FileUploadParameters{
+	_, err = slackClient.UploadFile(slack.FileUploadParameters{
 		Content:        snippet.Code,
 		Title:          snippet.Title,
 		Filetype:       models.GetSlackFileType(snippet.Language),
 		Channels:       []string{id},
-		InitialComment: fmt.Sprintf("%s via Code Directour", snippet.Owner),
+		InitialComment: fmt.Sprintf("%s via Code Directour", strings.Title(snippet.Owner)),
 	})
 	if err != nil {
 		return err

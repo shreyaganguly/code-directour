@@ -18,9 +18,9 @@ var Languages = []*Language{
 	&Language{"javascript", "json", "javascript", "JSON"},
 }
 
-func getLanguage(acecode string) string {
+func getLanguage(code string) string {
 	for _, v := range Languages {
-		if v.AceCode == acecode {
+		if v.Code == code {
 			return v.Name
 		}
 	}

@@ -8,10 +8,10 @@
     </div>
     <div class="form-group">
       <label> Language: </label>
-      <select class="form-control language" name="language" aria-describedby="languageHelp" onChange="changeLanguage(this.value);">
+      <select class="form-control language" name="language" aria-describedby="languageHelp" onChange="changeLanguage(this.options[this.selectedIndex].getAttribute('code'));">
         <option value="" disabled selected>Plain Text</option>
         {{range . }}
-        <option value="{{.AceCode}}">{{.Name}}</option>
+          <option value="{{.Code}}" code="{{.AceCode}}">{{.Name}}</option>
         {{ end }}
       </select>
       <small id="languageHelp" class="form-text text-muted">Choose the language for your code snippet</small>
