@@ -1,14 +1,14 @@
 <a class="btn btn-sm btn-primary float-right" style="margin-right: 164px;margin-top:-40px;" href="/index">Home</a>
 <a class="btn btn-sm btn-primary float-right" style="margin-right: 232px;margin-top:-40px;" href="/all">All Snippets</a>
 <div class="container profile" style="padding:20px;">
-  <form class="form-horizontal" action="/profile/link/save" method="POST">
+  <form class="form-horizontal">
     <h4 class="profileheadings"> Link Settings </h4>
     <div class="form-group">
       <label for="endpoint">Link Endpoint</label>
-      <input type="text" class="form-control" name="endpoint" aria-describedby="endpointHelp" placeholder="https://code-directour.com" value="{{ .Endpoint}}">
+      <input type="text" class="form-control" id="share-endpoint" name="endpoint" aria-describedby="endpointHelp" placeholder="https://code-directour.com" value="{{ .Endpoint}}">
       <small id="endpointHelp" class="form-text text-muted"><b>The link endpoint with which you can share the snippets with your colleagues. Please fill this to enable Sharing By Link</b></small>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary endpoint-submit">Submit</button>
     <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
   <form class="form-horizontal" action="/profile/email/save" method="POST">
@@ -55,3 +55,20 @@
     <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
 </div>
+<script>
+  $('.endpoint-submit').click(function (e) {
+        e.preventDefault();
+        $.ajax({
+          url: '/profile/link/save',
+          type: 'POST',
+          data : { endpoint: $('#share-endpoint').val()},
+          success : function(data) {
+            alert('ajax data posted');
+            $('#result').html(data);
+          },
+          error: function(data) {
+            $('#result').html(data);
+          }
+        });
+     });
+</script>

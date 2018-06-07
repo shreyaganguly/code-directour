@@ -32,14 +32,13 @@ func main() {
 	//TODO: add show more / less in view
 	//TODO: remove views as html
 	// TODO: give link from listing of snippets to a particular snippet
-	// TODO: give share action in overflow button
 	//TODO: make edit and delete post request
 	//TODO: refactor code
 	//TODO: change name of functions and methods and bucketnames
-	// TODO: add comments for exported functions
+	//TODO: add comments for exported functions
 	//TODO: add validations
 	//TODO: add name along with email while sharing content through mail
-	// TODO: show error message or success messages
+	//TODO: show error message or success messages
 	//TODO: handle slack errors more elegantly
 	//TODO: all errors to be passed by ajax call
 	//TODO: add more languages

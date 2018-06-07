@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -25,6 +26,8 @@ func profileSaveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch t := args["type"]; t {
 	case "link":
+		r.ParseForm()
+		fmt.Println(r.Form)
 		user.Endpoint = r.PostFormValue("endpoint")
 		err = db.Update(user)
 		if err != nil {
