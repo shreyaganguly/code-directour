@@ -167,6 +167,12 @@ func shareHandler(w http.ResponseWriter, r *http.Request) {
 
 func shareEmailHandler(w http.ResponseWriter, r *http.Request) {
 	args := mux.Vars(r)
+	user, err := db.LookupinUser(util.GetUserName(r))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	models.NewMailer(user.Email)
 	snippet, err := db.Find(util.GetUserName(r), args["key"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -178,6 +184,7 @@ func shareEmailHandler(w http.ResponseWriter, r *http.Request) {
 		Name:    r.PostFormValue("name"),
 	}
 	models.SmtpMailer.Data = snippet
+
 	err = models.SmtpMailer.SendMail()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

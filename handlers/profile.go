@@ -34,7 +34,6 @@ func profileSaveHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	case "email":
 		user.Email = models.NewEmailSettings(r.PostFormValue("server"), r.PostFormValue("port"), r.PostFormValue("email"), r.PostFormValue("password"), r.PostFormValue("sendername"), r.PostFormValue("senderemail"))
-		models.NewMailer(user.Email)
 		if user.Email.Server != "" && user.Email.Port != "" && user.Email.Address != "" && user.Email.Password != "" {
 			user.Email.Enabled = true
 		} else {
