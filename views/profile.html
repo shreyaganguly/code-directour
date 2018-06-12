@@ -1,17 +1,29 @@
 <a class="btn btn-sm btn-primary float-right" style="margin-right: 164px;margin-top:-40px;" href="/index">Home</a>
 <a class="btn btn-sm btn-primary float-right" style="margin-right: 232px;margin-top:-40px;" href="/all">All Snippets</a>
 <div class="container profile" style="padding:20px;">
-  <form class="form-horizontal">
+  <div class="alert alert-success alert-dismissible collapse" id="successToast" role="alert">
+    <button type="button" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Updated Successfully!!!</strong>
+  </div>
+  <div class="alert alert-danger alert-dismissible collapse" id="errorToast" role="alert">
+    <button type="button" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Some Error Occured!!!</strong>
+  </div>
+  <form class="form-horizontal" id="form-link">
     <h4 class="profileheadings"> Link Settings </h4>
     <div class="form-group">
       <label for="endpoint">Link Endpoint</label>
       <input type="text" class="form-control" id="share-endpoint" name="endpoint" aria-describedby="endpointHelp" placeholder="https://code-directour.com" value="{{ .Endpoint}}">
       <small id="endpointHelp" class="form-text text-muted"><b>The link endpoint with which you can share the snippets with your colleagues. Please fill this to enable Sharing By Link</b></small>
     </div>
-    <button type="submit" class="btn btn-primary endpoint-submit">Submit</button>
+    <button type="submit" class="btn btn-primary profile-submit" data-type="link">Submit</button>
     <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
-  <form class="form-horizontal" action="/profile/email/save" method="POST">
+  <form class="form-horizontal" id="form-email">
     <h4 class="profileheadings"> Email Settings </h4>
     <div class="form-group">
       <label for="server">SMTP Server</label>
@@ -41,33 +53,45 @@
       <input type="email" class="form-control" name="senderemail" aria-describedby="senderemailHelp" placeholder="no-reply@code-directour.com" value="{{ .Email.SenderEmail}}">
       <small id="senderemailHelp" class="form-text text-muted">Sender Email to show in the emails</small>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary profile-submit" data-type="email">Submit</button>
     <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
-  <form class="form-horizontal" action="/profile/slack/save" method="POST">
+  <form class="form-horizontal" id="form-slack">
     <h4 class="profileheadings"> Slack Settings </h4>
     <div class="form-group">
       <label for="token">Slack Token</label>
       <input type="text" class="form-control" name="token" aria-describedby="tokenHelp" placeholder="xoxb-xxxxxxxxxxxxxxxxxxxxxxxxxxx" value="{{.Slack.Token}}">
       <small id="tokenHelp" class="form-text text-muted">Refer to README.md for details of generating slack bot token. Please fill this to enable Sharing By Slack.</small>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary profile-submit" data-type="slack">Submit</button>
     <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
 </div>
 <script>
-  $('.endpoint-submit').click(function (e) {
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+$('.alert .close').click(function(){
+   $(this).parent().hide();
+});
+  $('.profile-submit').click(function (e) {
         e.preventDefault();
         $.ajax({
-          url: '/profile/link/save',
+          url: '/profile/' + $(this).data('type') + '/save',
           type: 'POST',
-          data : { endpoint: $('#share-endpoint').val()},
+          data : getFormData($("#form-" + $(this).data('type'))),
           success : function(data) {
-            alert('ajax data posted');
-            $('#result').html(data);
+            $('#successToast').show();
           },
           error: function(data) {
-            $('#result').html(data);
+            $('#errorToast').show();
           }
         });
      });

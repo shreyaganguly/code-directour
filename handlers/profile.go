@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -26,13 +25,10 @@ func profileSaveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch t := args["type"]; t {
 	case "link":
-		r.ParseForm()
-		fmt.Println(r.Form)
 		user.Endpoint = r.PostFormValue("endpoint")
 		err = db.Update(user)
 		if err != nil {
-			//TODO: cleaner error handling
-			http.Error(w, "Some error occured!!", http.StatusInternalServerError)
+			util.Renderer.HTML(w, http.StatusInternalServerError, "profile", user)
 			return
 		}
 	case "email":
@@ -44,22 +40,20 @@ func profileSaveHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		err = db.Update(user)
 		if err != nil {
-			//TODO: cleaner error handling
-			http.Error(w, "Some error occured!!", http.StatusInternalServerError)
+			util.Renderer.HTML(w, http.StatusInternalServerError, "profile", user)
 			return
 		}
 	case "slack":
 		user.Slack = &models.Slack{Token: r.PostFormValue("token")}
 		err = db.Update(user)
 		if err != nil {
-			//TODO: cleaner error handling
-			http.Error(w, "Some error occured!!", http.StatusInternalServerError)
+			util.Renderer.HTML(w, http.StatusInternalServerError, "profile", user)
 			return
 		}
 
 	default:
-		http.Error(w, "Some error occured!!", http.StatusInternalServerError)
+		util.Renderer.HTML(w, http.StatusInternalServerError, "profile", user)
+		return
 	}
-
-	http.Redirect(w, r, "/profile", http.StatusFound)
+	util.Renderer.HTML(w, http.StatusOK, "profile", user)
 }
