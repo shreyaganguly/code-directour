@@ -1,6 +1,6 @@
 {{ $endpoint := .User.Endpoint }}
 {{ $user := .User }}
-<div class="container" style="padding:20px;">
+<div class="container" id="all-snippets" style="padding:20px;">
   {{ if ne .ErrorMessage ""}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -9,6 +9,18 @@
       <strong>{{ .ErrorMessage }}</strong>
     </div>
   {{ end }}
+  <div class="alert alert-success alert-dismissible collapse" id="successDeleteToast" role="alert">
+    <button type="button" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Deleted Successfully!!!</strong>
+  </div>
+  <div class="alert alert-danger alert-dismissible collapse" id="errorToast" role="alert">
+    <button type="button" class="close" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Some Error Occured!!!</strong>
+  </div>
   <a class="btn btn-sm btn-primary float-right" style="margin-bottom:8px;margin-left:8px;" href="/index">Home</a>
   <a class="btn btn-sm btn-primary float-right" style="margin-bottom:8px;margin-left:8px;" href="/new">New snippet</a>
   {{ $length := len .SnippetInfos }} {{ if eq $length 0 }}
@@ -31,7 +43,7 @@
         {{template "_references" .References}}
         <div class="card-body">
           <a href="/edit/{{ .Key }}" class="btn btn-primary">Edit</a>
-          <a href="/delete/{{ .Key }}" class="btn btn-primary" id="delete">Delete</a>
+          <a data-key="{{ .Key }}" class="btn btn-primary delete-snippet" id="delete">Delete</a>
           <div class="btn-group">
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Share
@@ -162,6 +174,27 @@
           emailform = document.getElementById("sharemailform");
           slackform = document.getElementById("shareslackform");
       }
+
+      $('.alert .close').click(function(){
+         $(this).parent().hide();
+      });
+
+  $('.delete-snippet').click(function (e) {
+    console.log($(this).data('key'));
+        e.preventDefault();
+        $.ajax({
+          url: '/delete/' + $(this).data('key'),
+          type: 'POST',
+          data : {},
+          success : function(data) {
+            $('#all-snippets').html(data);
+            $('#successDeleteToast').show();
+          },
+          error: function(data) {
+            $('#errorToast').show();
+          }
+        });
+     });
   $('#shareModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget)
     var recepient = button.data('key')

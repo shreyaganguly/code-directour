@@ -22,15 +22,11 @@ func profileSaveHandler(w http.ResponseWriter, r *http.Request) {
 	user, err := db.LookupinUser(util.GetUserName(r))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	switch t := args["type"]; t {
 	case "link":
 		user.Endpoint = r.PostFormValue("endpoint")
-		err = db.Update(user)
-		if err != nil {
-			util.Renderer.HTML(w, http.StatusInternalServerError, "profile", user)
-			return
-		}
 	case "email":
 		user.Email = models.NewEmailSettings(r.PostFormValue("server"), r.PostFormValue("port"), r.PostFormValue("email"), r.PostFormValue("password"), r.PostFormValue("sendername"), r.PostFormValue("senderemail"))
 		if user.Email.Server != "" && user.Email.Port != "" && user.Email.Address != "" && user.Email.Password != "" {
@@ -38,21 +34,15 @@ func profileSaveHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			user.Email.Enabled = false
 		}
-		err = db.Update(user)
-		if err != nil {
-			util.Renderer.HTML(w, http.StatusInternalServerError, "profile", user)
-			return
-		}
 	case "slack":
 		user.Slack = &models.Slack{Token: r.PostFormValue("token")}
-		err = db.Update(user)
-		if err != nil {
-			util.Renderer.HTML(w, http.StatusInternalServerError, "profile", user)
-			return
-		}
-
 	default:
-		util.Renderer.HTML(w, http.StatusInternalServerError, "profile", user)
+		http.Error(w, "not matching with any routes", http.StatusInternalServerError)
+		return
+	}
+	err = db.Update(user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	util.Renderer.HTML(w, http.StatusOK, "profile", user)

@@ -267,6 +267,9 @@ func Delete(name, key string) error {
 			flag = true
 		}
 	}
+	if !flag {
+		return errors.New("Key does not exist")
+	}
 	marshaledSnippets, err := json.Marshal(snippetInfos)
 	if err != nil {
 		return err

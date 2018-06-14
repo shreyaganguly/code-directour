@@ -61,14 +61,32 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
-
 	args := mux.Vars(r)
 	err := db.Delete(util.GetUserName(r), args["key"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "/all", http.StatusFound)
+	snippets, err := db.All(util.GetUserName(r))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	user, err := db.LookupinUser(util.GetUserName(r))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	data := struct {
+		SnippetInfos models.Snippets
+		ErrorMessage string
+		User         *models.User
+	}{
+		snippets.Own().Reverse(),
+		"",
+		user,
+	}
+	util.Renderer.HTML(w, http.StatusOK, "all", data)
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
