@@ -113,9 +113,22 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 		snippet.Code = r.FormValue("code")
 		snippet.References = r.FormValue("references")
 		snippet.ModifiedAt = time.Now().Unix()
-	} else {
-		snippet = models.NewSnippet(util.GetUserName(r), r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"), false, "", false, nil)
+		err = db.Update(snippet)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		data := struct {
+			Languages []*models.Language
+			Snippet   *models.SnippetInfo
+		}{
+			models.Languages,
+			snippet,
+		}
+		util.Renderer.HTML(w, http.StatusOK, "edit", data)
+		return
 	}
+	snippet = models.NewSnippet(util.GetUserName(r), r.FormValue("title"), r.FormValue("language"), r.FormValue("code"), r.FormValue("references"), false, "", false, nil)
 	err = db.Update(snippet)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

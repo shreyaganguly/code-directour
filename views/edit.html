@@ -1,6 +1,19 @@
 {{ $code := .Snippet.Language | getAceCode }}
-<div class="container" style="padding:20px;">
-  <form class="form-horizontal" action="/save" method="POST">
+<div id="edit-container">
+  <div class="container" style="padding:20px;">
+    <div class="alert alert-success alert-dismissible collapse" id="successToast" role="alert">
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Updated Successfully!!!</strong>
+    </div>
+    <div class="alert alert-danger alert-dismissible collapse" id="errorToast" role="alert">
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Some Error Occured!!!</strong>
+    </div>
+  <form class="form-horizontal" id="edit-settings">
     <input type="hidden" name="key" value="{{ .Snippet.Key }}">
     <h3>New Snippet</h3>
     <div class="form-group">
@@ -28,11 +41,39 @@
       <input class="form-control" id="title" aria-describedby="referencesHelp" name="references" value="{{ .Snippet.References }}" placeholder="Enter references">
       <small id="referencesHelp" class="form-text text-muted">Paste any URLs of the code snippet or a page number of a book maybe</small>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary edit-submit">Submit</button>
     <a class="btn btn-secondary" style="margin-left:8px;" href="/all">Cancel</a>
   </form>
 </div>
+</div>
 <script>
+function getFormData($form){
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+$('.alert .close').click(function(){
+   $(this).parent().hide();
+});
+$('.edit-submit').click(function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: '/save',
+        type: 'POST',
+        data : getFormData($("#edit-settings")),
+        success : function(data) {
+          $('#successToast').show();
+        },
+        error: function(data) {
+          $('#errorToast').show();
+        }
+      });
+   });
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.session.setMode("ace/mode/{{$code}}");
