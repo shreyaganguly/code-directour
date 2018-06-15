@@ -1,5 +1,6 @@
 <a class="btn btn-sm btn-primary float-right" style="margin-right: 164px;margin-top:-40px;" href="/index">Home</a>
 <a class="btn btn-sm btn-primary float-right" style="margin-right: 232px;margin-top:-40px;" href="/all">All Snippets</a>
+<div id="profile-settings" >
 <div class="container profile" style="padding:20px;">
   <div class="alert alert-success alert-dismissible collapse" id="successToast" role="alert">
     <button type="button" class="close" aria-label="Close">
@@ -13,7 +14,6 @@
     </button>
     <strong>Some Error Occured!!!</strong>
   </div>
-  <div id="profile-settings" >
     <form class="form-horizontal" id="form-link">
       <h4 class="profileheadings"> Link Settings </h4>
       <div class="form-group">
@@ -67,7 +67,7 @@
     <button type="submit" class="btn btn-primary profile-submit" data-type="slack">Submit</button>
     <a class="btn btn-secondary" style="margin-left:8px;" href="/index">Cancel</a>
   </form>
-  </div>
+</div>
 <script>
 function getFormData($form){
     var unindexed_array = $form.serializeArray();
@@ -89,6 +89,7 @@ $('.alert .close').click(function(){
           type: 'POST',
           data : getFormData($("#form-" + $(this).data('type'))),
           success : function(data) {
+            $('#profile-settings').html(data);
             $('#successToast').show();
           },
           error: function(data) {
